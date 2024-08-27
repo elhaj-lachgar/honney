@@ -1,0 +1,44 @@
+import mongoose from "mongoose";
+
+const OrderSchema = new mongoose.Schema(
+  {
+    address: {
+      type: mongoose.Schema.ObjectId,
+      ref: "address",
+      required: [true, "الرجاء ادخال البريد الالكتروني"],
+    },
+    products: [
+      {
+        product: {
+          type: mongoose.Schema.ObjectId,
+          ref: "product",
+        },
+        quantity: {
+          type: Number,
+          default: 1,
+        },
+        productQuantity : Number,
+      },
+    ],
+
+    totalePrice: {
+      type: Number,
+    },
+    currency: {
+      type: String,
+      enum: ["MAD", "EUR", "USD"],
+      default: "MAD",
+    },
+    isDelaiverd: {
+      type: Boolean,
+      default: false,
+    },
+    
+    Delaiverd_At: Date,
+  },
+  { timestamps: true }
+);
+
+const OrderModule = mongoose.model("order", OrderSchema);
+
+export default OrderModule;
