@@ -18,11 +18,15 @@ export const CreateOrderValidator = [
         const q_p = product.productQuantity.find(
           (v) => v._id.toString() == item.quantitySelected
         );
-        if(!q_p) throw new Error('quantity selected not found');
-        totalePrice += product.price * item.quantity * q_p.number ;
+        if (!q_p) throw new Error("quantity selected not found");
+        totalePrice += product.price * item.quantity * q_p.number;
         return {
           product: product._id,
           quantity: item.quantity,
+          productQuantity: {
+            number: q_p.number,
+            quantity: q_p.quantity,
+          },
         };
       });
 

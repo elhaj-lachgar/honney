@@ -22,8 +22,8 @@ import {
 } from "../../validator/auth-signup-validator";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { app } from "../../../firebase";
+import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
 
 function SignUp() {
   const [view, setView] = useState(true);
@@ -43,15 +43,12 @@ function SignUp() {
     resolver,
   });
 
-  const GoogleSignUp = async () => {
-    const provider = new GoogleAuthProvider();
-    const auth = getAuth(app);
+  const GoogleSignUp = async (email : string , name : string , avatar : string) => {
     try {
-      const result = await signInWithPopup(auth, provider);
       const data = JSON.stringify({
-        email: result.user.email,
-        avatar: result.user.photoURL,
-        name: result.user.displayName,
+        email,
+        avatar,
+        name,
       });
       const url = BASE_URL + "/auth/google-sign-up";
       const res = await axios.post(url, data, { headers: DEFAULT_HEADER });
@@ -67,8 +64,8 @@ function SignUp() {
         const option = toastOption("error", error_message);
         toast(option);
       }
-    } catch (error : any) {
-      const error_message = error?.responce?.data?.error||"Sign up failed" ;
+    } catch (error: any) {
+      const error_message = error?.responce?.data?.error || "Sign up failed";
       const option = toastOption("error", error_message);
       toast(option);
     }
@@ -186,21 +183,23 @@ function SignUp() {
           </p>
         )}
       </div>
-      <button
-        type="button"
-        className="flex items-center cursor-pointer gap-x-2  border p-1 rounded-md"
-        onClick={(e) => {
-          e.preventDefault();
-          GoogleSignUp();
+      <GoogleLogin
+        width={"100%"}
+        onSuccess={(credentialResponse) => {
+          if (!credentialResponse?.credential) return;
+          const info = jwtDecode<{
+            email: string;
+            name: string;
+            picture: string;
+          }>(credentialResponse.credential);
+          GoogleSignUp(info.email, info.name, info.picture);
         }}
-      >
-        <img
-          src="/icon/google.png"
-          alt="google icon"
-          className="w-7 h-7 border "
-        />
-        <h1>تسجيل ب Google</h1>
-      </button>
+        onError={() => {
+          const err = "google auth failed";
+          const option = toastOption("error", err);
+          toast(option);
+        }}
+      />
       <>
         <Button
           bg={"#dcb140"}

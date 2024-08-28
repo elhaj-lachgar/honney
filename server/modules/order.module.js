@@ -17,7 +17,10 @@ const OrderSchema = new mongoose.Schema(
           type: Number,
           default: 1,
         },
-        productQuantity : Number,
+        productQuantity : {
+          number : Number,
+          quantity: Number,
+        },
       },
     ],
 

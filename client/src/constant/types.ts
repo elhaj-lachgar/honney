@@ -82,6 +82,7 @@ export type TOrder = {
     {
       product: TProductService;
       quantity: number;
+      productQuantity: { _id: string; quantity: number; number: number };
     }
   ];
   totalePrice: number;

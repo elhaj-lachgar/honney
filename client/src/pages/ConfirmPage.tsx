@@ -81,12 +81,12 @@ const ConfirmPage = () => {
               </div>
               {order?.products.map((product) => (
                 <div className="flex w-full px-3" key={product.product._id}>
-                  <p className="flex-[2] md:flex-[5] overflow-x-auto">
-                    {product.product.name}
+                  <p  className="flex-[2] md:flex-[5]  overflow-x-auto">
+                    {product.product.name + product.productQuantity.quantity + "ml"}
                   </p>
                   <p className="flex-[2] font-medium">X {product.quantity}</p>
                   <p className="flex-[2] lg:flex-[3] font-medium ">
-                    {product.product.price} {product.product.currency}
+                    {product.product.price  * product.productQuantity.number} {product.product.currency}
                   </p>
                 </div>
               ))}

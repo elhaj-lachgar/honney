@@ -144,7 +144,7 @@ function HomeDetails() {
                 <h1 className="text-4xl font-serif">{product?.name}</h1>
                 <h1 className="text-2xl flex  items-center gap-x-2 font-bold text-gray-400">
                   <span className="text-lg">{product?.currency}</span>
-                    {product?.price * (finalPrice?.number || 1)}
+                  {product?.price * (finalPrice?.number || 1)}
                 </h1>
                 <div className="">
                   <Button
@@ -155,7 +155,15 @@ function HomeDetails() {
                     color={"white"}
                     size={"lg"}
                     onClick={() => {
-                      addToCard(product);
+                      if (!finalPrice) {
+                        const option = toastOption(
+                          "error",
+                          "Please select quantity"
+                        );
+                        toast(option);
+                        return;
+                      }
+                      addToCard(product, finalPrice);
                       router("/order");
                     }}
                   >
@@ -198,7 +206,18 @@ function HomeDetails() {
                     }}
                     color={"white"}
                     leftIcon={<ShoppingBasket />}
-                    onClick={() => addToCard(product)}
+                    onClick={() => {
+                      console.log(finalPrice);
+                      if (!finalPrice) {
+                        const option = toastOption(
+                          "error",
+                          "Please select quantity"
+                        );
+                        toast(option);
+                        return;
+                      }
+                      addToCard(product, finalPrice);
+                    }}
                   >
                     إضافة إلى سلة
                   </Button>

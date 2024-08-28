@@ -45,7 +45,10 @@ function FilterCard({ product }: { product: TProductService }) {
             backgroundColor: "#F9C349",
           }}
           color={"white"}
-          onClick={() => addToCard(product)}
+          onClick={() => {
+            if (product.productQuantity.length <= 0) return;
+            addToCard(product, product.productQuantity[0]);
+          }}
         >
           إضافة
         </Button>

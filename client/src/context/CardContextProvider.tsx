@@ -6,7 +6,14 @@ import { toastOption } from "../lib";
 type TProductContext = {
   product: TProductService;
   quantity: number;
+  productQuantity: {
+    _id: string;
+    number: number;
+    quantity: number;
+  };
 };
+
+type TProductQuantity = { _id: string; number: number; quantity: number };
 
 type TCard = {
   products: TProductContext[];
@@ -15,10 +22,22 @@ type TCard = {
 
 type TCardContext = {
   card: TCard;
-  addToCard: (product: TProductService) => void;
-  deleteFromCard: (product: TProductService) => void;
-  incrementCard: (product: TProductService) => void;
-  decrementCard: (product: TProductService) => void;
+  addToCard: (
+    product: TProductService,
+    productQuantity: TProductQuantity
+  ) => void;
+  deleteFromCard: (
+    product: TProductService,
+    productQuantity: TProductQuantity
+  ) => void;
+  incrementCard: (
+    product: TProductService,
+    productQuantity: TProductQuantity
+  ) => void;
+  decrementCard: (
+    product: TProductService,
+    productQuantity: TProductQuantity
+  ) => void;
   clearCard: () => void;
 };
 
@@ -40,14 +59,23 @@ function CardContextProvider({ children }: { children: React.ReactNode }) {
   const [card, setCard] = useState<TCard>({ products: [], totalePrice: 0 });
   const toast = useToast();
 
-  const addToCard = (product: TProductService ) => {
-    const index = card.products.findIndex((p) => p.product._id == product._id);
+  const addToCard = (
+    product: TProductService,
+    productQuantity: TProductQuantity
+  ) => {
+    const index = card.products.findIndex(
+      (p) =>
+        p.product._id == product._id &&
+        p.productQuantity._id == productQuantity._id
+    );
+    console.log(index);
     if (index <= -1) {
       const arr: TProductContext[] = [
         ...card.products,
-        { product: product, quantity: 1 },
+        { product: product, quantity: 1, productQuantity },
       ];
-      const totalePrice = card.totalePrice + product.price;
+      const totalePrice =
+        card.totalePrice + product.price * productQuantity.number;
 
       setCard({ products: arr, totalePrice });
 
@@ -58,7 +86,9 @@ function CardContextProvider({ children }: { children: React.ReactNode }) {
     } else {
       const arr = card.products;
       arr[index].quantity += 1;
-      const totalePrice = card.totalePrice + card.products[index].product.price;
+      const totalePrice =
+        card.totalePrice +
+        card.products[index].product.price * productQuantity.number;
 
       setCard({ products: arr, totalePrice });
 
@@ -71,14 +101,23 @@ function CardContextProvider({ children }: { children: React.ReactNode }) {
     toast(option);
   };
 
-  const deleteFromCard = (product: TProductService) => {
-    const index = card.products.findIndex((p) => p.product._id == product._id);
+  const deleteFromCard = (
+    product: TProductService,
+    productQuantity: TProductQuantity
+  ) => {
+    const index = card.products.findIndex(
+      (p) =>
+        p.product._id == product._id &&
+        p.productQuantity._id == productQuantity._id
+    );
     if (index <= -1) return;
     const arr = card.products;
     const deleteElement = arr.splice(index, 1);
     const totalePrice =
       card.totalePrice -
-      deleteElement[0].product.price * deleteElement[0].quantity;
+      deleteElement[0].product.price *
+        deleteElement[0].quantity *
+        productQuantity.number;
     setCard({ products: arr, totalePrice });
 
     window.localStorage.setItem(
@@ -87,12 +126,20 @@ function CardContextProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
-  const decrementCard = (product: TProductService) => {
-    const index = card.products.findIndex((p) => p.product._id == product._id);
+  const decrementCard = (
+    product: TProductService,
+    productQuantity: TProductQuantity
+  ) => {
+    const index = card.products.findIndex(
+      (p) =>
+        p.product._id == product._id &&
+        p.productQuantity._id == productQuantity._id
+    );
     if (index <= -1 || card.products[index].quantity <= 1) return;
     const arr = card.products;
     arr[index].quantity -= 1;
-    const totalePrice = card.totalePrice - arr[index].product.price;
+    const totalePrice =
+      card.totalePrice - arr[index].product.price * productQuantity.number;
     setCard({ products: arr, totalePrice });
 
     window.localStorage.setItem(
@@ -101,12 +148,20 @@ function CardContextProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
-  const incrementCard = (product: TProductService) => {
-    const index = card.products.findIndex((p) => p.product._id == product._id);
+  const incrementCard = (
+    product: TProductService,
+    productQuantity: TProductQuantity
+  ) => {
+    const index = card.products.findIndex(
+      (p) =>
+        p.product._id == product._id &&
+        p.productQuantity._id == productQuantity._id
+    );
     if (index <= -1) return;
     const arr = card.products;
     arr[index].quantity += 1;
-    const totalePrice = card.totalePrice + arr[index].product.price;
+    const totalePrice =
+      card.totalePrice + arr[index].product.price * productQuantity.number;
     setCard({ products: arr, totalePrice });
 
     window.localStorage.setItem(

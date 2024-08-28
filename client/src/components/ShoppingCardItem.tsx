@@ -7,9 +7,11 @@ import { TProductService } from "../constant/types";
 function ShoppingCardItem({
   product,
   value,
+  productQuantity
 }: {
   product: TProductService;
   value: "cart" | "wishlist";
+  productQuantity?: { _id: string; number: number; quantity: number };
 }) {
   const { deleteFromCard } = useCardContext();
   const controls = useAnimationControls();
@@ -42,14 +44,17 @@ function ShoppingCardItem({
         <div className="flex flex-col h-full justify-between">
           <h1>{product.name}</h1>
           <h2 className="text-sm text-gray-400">{product.category.name}</h2>
-          <b>{ product.price + product.currency}</b>
+          <b>{product.price * (productQuantity?.number || 1) + product.currency}</b>
         </div>
       </div>
       <div className="flex justify-end    gap-x-2">
         <X
           className="bg-red-500 text-white  p-1 rounded-full  cursor-pointer"
           onClick={() => {
-            if (value == "cart") deleteFromCard(product);
+            if (value == "cart") { 
+              if(!productQuantity) return ; 
+              deleteFromCard(product , productQuantity)
+            }
             else deleteProduct(product);
             controls.start("disable");
           }}

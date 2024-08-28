@@ -25,6 +25,7 @@ function ShoppingCart() {
             <MobileCartItem
               quantity={product.quantity}
               product={product.product}
+              productQuantity={product.productQuantity}
               key={product.product._id}
             />
           ))}

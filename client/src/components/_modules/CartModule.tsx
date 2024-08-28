@@ -105,6 +105,7 @@ function CartModule() {
                   <ShoppingCardItem
                     value="cart"
                     product={product.product}
+                    productQuantity={product.productQuantity}
                     key={product.product._id}
                   />
                 ))}

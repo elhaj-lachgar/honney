@@ -15,11 +15,13 @@ import { toastOption } from "../../lib";
 import { TAuthCredentials, resolver } from "../../validator/auth.validator";
 import axios from "axios";
 import { useForm } from "react-hook-form";
-import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
-import { app } from "../../../firebase";
+// import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
+// import { app } from "../../../firebase";
+import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
 function SignIn() {
   const [view, setView] = useState(true);
-  const [loading , setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { setAuthUser } = useAuthContext();
   const toast = useToast();
   const {
@@ -31,12 +33,9 @@ function SignIn() {
   });
   const router = useNavigate();
 
-  const GoogleSignIn = async () => {
-    const provider = new GoogleAuthProvider();
-    const auth = getAuth(app);
+  const GoogleSignIn = async (email: string, name: string, avatar: string) => {
     try {
-      const result = await signInWithPopup(auth, provider);
-      const data = JSON.stringify({ email: result.user.email  , name : result.user.displayName});
+      const data = JSON.stringify({ email, name, avatar });
       const url = BASE_URL + "/auth/google-sign-in";
       const res = await axios.post(url, data, { headers: DEFAULT_HEADER });
       if (res.data?.success) {
@@ -54,8 +53,8 @@ function SignIn() {
         const option = toastOption("error", error_message);
         toast(option);
       }
-    } catch (error : any) {
-      const err = error.response?.data as TErrorService 
+    } catch (error: any) {
+      const err = error.response?.data as TErrorService;
       const option = toastOption("error", err.error);
       toast(option);
     }
@@ -85,8 +84,8 @@ function SignIn() {
         const option = toastOption("error", error_message);
         toast(option);
       }
-    } catch (error:any) {
-      const err = error.response?.data as TErrorService 
+    } catch (error: any) {
+      const err = error.response?.data as TErrorService;
       const option = toastOption("error", err.error);
       toast(option);
     }
@@ -149,20 +148,23 @@ function SignIn() {
       >
         نسيت كلمة السير
       </Link>
-      <button
-        className="flex items-center cursor-pointer gap-x-2  border p-1 rounded-md"
-        onClick={(e) => {
-          e.preventDefault();
-          GoogleSignIn();
+      <GoogleLogin
+        width={"100%"}
+        onSuccess={(credentialResponse) => {
+          if (!credentialResponse?.credential) return;
+          const info = jwtDecode<{
+            email: string;
+            name: string;
+            picture: string;
+          }>(credentialResponse.credential);
+          GoogleSignIn(info.email, info.name, info.picture);
         }}
-      >
-        <img
-          src="/icon/google.png"
-          alt="google icon"
-          className="w-7 h-7 border "
-        />
-        <h1>تسجيل ب Google</h1>
-      </button>
+        onError={() => {
+          const err = "google auth failed";
+          const option = toastOption("error", err);
+          toast(option);
+        }}
+      />
       <Button
         bg={"#dcb140"}
         isLoading={loading}

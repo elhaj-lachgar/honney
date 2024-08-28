@@ -1,7 +1,7 @@
 import { Verified } from "lucide-react";
 import AdressModule from "../components/profile/AdressModule";
 import { toastOption } from "../lib/index";
-import { Button,  useToast } from "@chakra-ui/react";
+import { Button, useToast } from "@chakra-ui/react";
 import { useCardContext } from "../context/CardContextProvider";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -67,6 +67,7 @@ function OrderPage() {
       return {
         _id: item.product._id,
         quantity: item.quantity,
+        quantitySelected: item.productQuantity._id,
       };
     });
     const data = JSON.stringify({ card: card_, address: selectedAddress });
@@ -163,10 +164,14 @@ function OrderPage() {
                 />
                 <div className="flex flex-col">
                   <h1>{product.product.name}</h1>
-                  <p>{product.product.category.name}</p>
+                  <p
+                    dir="ltr"
+                    className="text-end"
+                  >{`${product.productQuantity.quantity} ml`}</p>
                   <p>
                     {product.quantity} *{" "}
-                    {product.product.price + product.product.currency}{" "}
+                    {product.product.price * product.productQuantity.number +
+                      product.product.currency}{" "}
                   </p>
                 </div>
               </div>

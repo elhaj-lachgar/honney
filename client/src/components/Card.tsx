@@ -160,7 +160,8 @@ function Card({
           leftIcon={<ShoppingBasket />}
           onClick={() => {
             if (!isExiste) {
-              addToCard(product);
+              if(product.productQuantity.length <= 0 ) return;
+              addToCard(product , product.productQuantity[0]);
             }
           }}
         >
