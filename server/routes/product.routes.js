@@ -26,21 +26,25 @@ import {
   getAllProducts,
 } from "../services/product.service.js";
 
+import { MultipleCloudHandler } from "../middlewares/cloud-handler.js";
+
 const router = Router();
 
-router.get("/all", ProtectMiddleware, AllwodUser("admin"), getAllProducts);
+router.get("/all", getAllProducts);
 
-router
-  .route("/")
-  .get(getProducts)
-  .post(
-    ProtectMiddleware,
-    AllwodUser("admin"),
-    CreateProductValidator,
-    CreateProduct
-  );
+router.route("/").get(getProducts).post(
+  ProtectMiddleware,
+  AllwodUser("admin"),
+  CreateProductValidator,
+  CreateProduct
+);
 
-router.get("/related-products/:productId", getRelatedProducts);
+router.get(
+  "/related-products/:productId",
+  ProtectMiddleware,
+  AllwodUser("amdin"),
+  getRelatedProducts
+);
 
 router.put(
   "/upload-images/:productId",
@@ -49,6 +53,7 @@ router.put(
   UploadImageValidator,
   local_upload.array("image", 6),
   local_multipe_upload("images", "product"),
+  MultipleCloudHandler("product", "images"),
   UploadImageOfProduct
 );
 

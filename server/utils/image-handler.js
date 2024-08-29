@@ -1,12 +1,12 @@
-import fs from "fs";
 import path from "path";
 import sharp from "sharp";
+import { v2 as cloudinary } from "cloudinary";
 
-export const deleteImage =  (filename) => {
+export const deleteImage = async (filename) => {
   try {
-    fs.unlinkSync(
-      path.join(import.meta.dirname, "../upload/" + filename)
-    );
+    await cloudinary.api
+      .delete_resources(filename, { type: "upload", resource_type: "image" })
+      .catch((error) => new Error(error));
   } catch (error) {
     throw new Error(error);
   }

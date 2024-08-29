@@ -18,9 +18,11 @@ export const ChangeAvatar = expressAsyncHandler(async (req, res, next) => {
   const currentImage = req.user?.avatar;
   if (req.body.avatar) {
     if (currentImage) {
-      const url = currentImage.split("/")[3] + "/" + currentImage.split("/")[4];
+      const image = [currentImage.split("/")[7], currentImage.split("/")[8]]
+        .join("/")
+        .split(".")[0];
       try {
-        deleteImage(url);
+        await deleteImage([image]);
       } catch (error) {
         return next(new ErrorHandler("خطأ اثناء حذف الصورة الرمزية", 400));
       }
@@ -38,11 +40,13 @@ export const ChangeAvatar = expressAsyncHandler(async (req, res, next) => {
 export const DeleteAvatar = expressAsyncHandler(async (req, res, next) => {
   const currentImage = req.user.avatar;
   if (currentImage) {
-    const url = currentImage.split("/")[3] + "/" + currentImage.split("/")[4];
+    const image = [currentImage.split("/")[7], currentImage.split("/")[8]]
+      .join("/")
+      .split(".")[0];
     try {
-      deleteImage(url);
+      await deleteImage([image]);
     } catch (error) {
-      return next(new ErrorHandler("خطأ أثناءحذف الصورة الرمزية", 400));
+      return next(new ErrorHandler("خطأ اثناء حذف الصورة الرمزية", 400));
     }
   }
   req.user.avatar = undefined;
@@ -52,9 +56,11 @@ export const DeleteAvatar = expressAsyncHandler(async (req, res, next) => {
 });
 
 export const GetUser = expressAsyncHandler(async (req, res) => {
-  const user = await ( await UserModule.findOne({ _id: req.user._id }).select(
-    "-role -password"
-  ).populate('userOrder')).populate('userOrder.address userOrder.products.product');
+  const user = await (
+    await UserModule.findOne({ _id: req.user._id })
+      .select("-role -password")
+      .populate("userOrder")
+  ).populate("userOrder.address userOrder.products.product");
   return res.status(200).json({ user, success: true });
 });
 
@@ -82,4 +88,3 @@ export const UpdateRole = expressAsyncHandler(async (req, res, next) => {
     .status(200)
     .json({ success: true, message: "user updated successfully" });
 });
-

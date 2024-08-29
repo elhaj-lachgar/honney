@@ -18,6 +18,8 @@ import {
 import ProtectMiddleware from "../middlewares/protect-middleware.js";
 import AllwodUser from "../utils/allwod-user.js";
 
+import { SingleCloudHandler } from "../middlewares/cloud-handler.js";
+
 const router = Router();
 
 router.get("/get-users", GetUsers);
@@ -27,6 +29,7 @@ router.put(
   ProtectMiddleware,
   local_upload.single("avatar"),
   local_single_upload("avatar", "user"),
+  SingleCloudHandler('user'  , 'avatar'),
   ChangeAvatar
 );
 

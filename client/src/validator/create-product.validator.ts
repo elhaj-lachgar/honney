@@ -20,7 +20,6 @@ const CreateProductCredentials = z.object({
     .string()
     .refine(isNumber, { message: "المرجو ادخال السعر بالاعداد" }),
   discountPercentage: z.string().optional(),
-  productQuantity: z.string().optional(),
 });
 
 export type TCreateProductCredentials = z.infer<

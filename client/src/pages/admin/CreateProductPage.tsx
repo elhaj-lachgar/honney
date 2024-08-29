@@ -23,6 +23,7 @@ function CreateProductPage() {
   const router = useNavigate();
   const [categorys, setCategorys] = useState<TCategory[]>([]);
   const [categoryLoading, setCategoryLoading] = useState(false);
+  const [productQuantityInfo, setProductQuantityInfo] = useState("");
   const toast = useToast();
   const {
     formState: { errors },
@@ -34,7 +35,25 @@ function CreateProductPage() {
 
   const CreateProductHandler = (params: TCreateProductCredentials) => {
     const url = `${BASE_URL}/product`;
-    const data = JSON.stringify(params);
+    let data;
+    if (productQuantityInfo) {
+      let arr: { number: number; quantity: number }[] = [];
+      productQuantityInfo.split(",").forEach((vl) => {
+        const vl_info = vl.split("/");
+        if (
+          vl_info.length == 2 &&
+          !isNaN(parseInt(vl_info[0])) &&
+          !isNaN(parseInt(vl_info[1]))
+        ) {
+          arr.push({
+            quantity: parseInt(vl_info[0]),
+            number: parseInt(vl_info[1]),
+          });
+        }
+      });
+      data = JSON.stringify({ ...params, productQuantity: arr });
+    } else data = JSON.stringify(params);
+
     try {
       fetch(url, { method: "POST", headers: DEFAULT_HEADER, body: data })
         .then((response) => response.json())
@@ -78,7 +97,7 @@ function CreateProductPage() {
   useEffect(() => {
     GetCategorys();
   }, []);
-  
+
   return (
     <form
       className="flex flex-col text-gray-600 gap-y-5"
@@ -179,10 +198,12 @@ function CreateProductPage() {
           <div className="flex-1">
             <label>Quantity of Product</label>
             <InputGroup size={"sm"} maxW={"150px"}>
-              <Input type="number" {...register("productQuantity")} />
+              <Input
+                type="text"
+                onChange={(e) => setProductQuantityInfo(e.target.value)}
+              />
               <InputRightAddon>ml</InputRightAddon>
             </InputGroup>
-            {errors.productQuantity &&  <p className="text-red-500 italic text-sm">{errors.productQuantity.message}</p>}
           </div>
         </div>
         <div className="flex flex-col flex-1 ">
