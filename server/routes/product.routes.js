@@ -41,8 +41,6 @@ router.route("/").get(getProducts).post(
 
 router.get(
   "/related-products/:productId",
-  ProtectMiddleware,
-  AllwodUser("amdin"),
   getRelatedProducts
 );
 
