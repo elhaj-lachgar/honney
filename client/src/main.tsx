@@ -13,7 +13,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthContextProvider>
-        <GoogleOAuthProvider clientId="306990860718-09qcq36s2fjr7q7n4m5fpq423loc8gf8.apps.googleusercontent.com">
+        <GoogleOAuthProvider clientId="306990860718-s4eapso2pq7luh19u41hdv46o6bclihe.apps.googleusercontent.com">
           <CardContextProvider>
             <WishListContextProvider>
               <ChakraProvider>
