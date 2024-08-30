@@ -13,7 +13,7 @@ import { toastOption } from "../lib";
 import React, { Fragment, useEffect, useState } from "react";
 import Card from "../components/Card";
 import { BASE_URL, FIRST_NAVBAR } from "../constant";
-import { TCategory, TProductService } from "../constant/types";
+import { TCategory, TErrorService, TProductService } from "../constant/types";
 import { AlignLeft, X } from "lucide-react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -91,8 +91,9 @@ function SearchPage() {
           }
         })
         .finally(() => setLoading(false));
-    } catch (error) {
-      const option = toastOption("error", "featching error");
+    } catch (error:any) {
+      const err = error.response?.data as TErrorService;
+      const option = toastOption("error", err.error || "خطأ أثناء العملية ");
       toast(option);
     }
   };
@@ -104,8 +105,9 @@ function SearchPage() {
       if (res.data?.success) {
         setProductsName(res.data?.names);
       }
-    } catch (error) {
-      const option = toastOption("error", "internal error");
+    } catch (error:any) {
+      const err = error.response?.data as TErrorService;
+      const option = toastOption("error", err.error || "خطأ أثناء العملية ");
       toast(option);
     }
   };

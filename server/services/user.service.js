@@ -78,9 +78,9 @@ export const UpdateRole = expressAsyncHandler(async (req, res, next) => {
     { role: req.body.role },
     { new: true }
   );
-  if (!user) return next(new ErrorHandler("user not found", 404));
+  if (!user) return next(new ErrorHandler("هذا المستخدم غير موجود", 404));
 
   return res
     .status(200)
-    .json({ success: true, message: "user updated successfully" });
+    .json({ success: true, message: "تم تحديث المستخدم بنجاح" });
 });

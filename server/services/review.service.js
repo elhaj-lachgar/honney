@@ -15,7 +15,7 @@ export const createComment = expressAsyncHandler(async (req, res, next) => {
 
   const product = await ProductModule.findOne({ _id: productId });
 
-  if (!product) return next(new ErrorHandler("Product not found", 404));
+  if (!product) return next(new ErrorHandler("المنتج غير موجود", 404));
 
   const review = await ReviewModule.create({
     content,
@@ -64,7 +64,7 @@ export const updateComment = expressAsyncHandler(async (req, res, next) => {
   if (req.body.rate && req.body.rate != review.rate) {
     const product = await ProductModule.findOne({ _id: req.body.productId });
 
-    if (!product) return next(new ErrorHandler("Product not found", 404));
+    if (!product) return next(new ErrorHandler("المنتج غير موجود", 404));
 
     if (!product.reviews.includes(review._id))
       return next(new ErrorHandler("لا توجد مراجعات للمنتج حاليا", 404));
@@ -136,11 +136,11 @@ export const deleteComment = expressAsyncHandler(async (req, res, next) => {
 
   const product = await ProductModule.findOne({ _id: req.body.productId });
 
-  if (!product) return next(new ErrorHandler("product not found", 404));
+  if (!product) return next(new ErrorHandler("المنتج غير موجود", 404));
 
   const exist = product.reviews.findIndex((rev) => rev._id.toString() == review._id.toString());
 
-  if (exist <= -1) return next(new ErrorHandler("review not found", 404));
+  if (exist <= -1) return next(new ErrorHandler("مراجعة غير موجود", 404));
 
   const size =
     product.reviews.length != 1

@@ -4,7 +4,7 @@ import ChangeAvatarModule from "../../components/profile/ChangeAvatarModule";
 import { useEffect, useState } from "react";
 import { toastOption } from "../../lib";
 import { BASE_URL, DEFAULT_HEADER } from "../../constant";
-import { TUser } from "../../constant/types";
+import { TErrorService, TUser } from "../../constant/types";
 import axios from "axios";
 import { Helmet } from "react-helmet";
 
@@ -31,8 +31,9 @@ function EditProfile() {
         const option = toastOption("error", "خطاء في عملية");
         toast(option);
       }
-    } catch (error) {
-      const option = toastOption("error", "خطاء في عملية");
+    } catch (error:any) {
+      const err = error.response?.data as TErrorService;
+      const option = toastOption("error", err.error || "خطأ أثناء العملية ");
       toast(option);
     }
   };

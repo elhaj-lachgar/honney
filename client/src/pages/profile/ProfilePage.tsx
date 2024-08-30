@@ -7,7 +7,7 @@ import axios from "axios";
 import { toastOption } from "../../lib";
 import { useToast } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { TAddress } from "../../constant/types";
+import { TAddress, TErrorService } from "../../constant/types";
 import { Helmet } from "react-helmet";
 
 function ProfilePage() {
@@ -26,8 +26,9 @@ function ProfilePage() {
         const option = toastOption("error", "خطّأ في عملية");
         toast(option);
       }
-    } catch (error) {
-      const option = toastOption("error", "خطّأ في عملية");
+    } catch (error:any) {
+      const err = error.response?.data as TErrorService;
+      const option = toastOption("error", err.error || "خطأ أثناء العملية ");
       toast(option);
     }
   };

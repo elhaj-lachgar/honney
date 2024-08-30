@@ -83,19 +83,6 @@ function ContactUs() {
                     className={`${
                       view.includes(question.id) ? "block" : "hidden"
                     }`}
-                    // initial={{
-                    //   opacity: 0,
-                    //   width: 0,
-                    //   height: 0,
-                    // }}
-                    // transition={{
-                    //   duration: 0.5,
-                    // }}
-                    // whileInView={{
-                    //   width: "100%",
-                    //   height: "100%",
-                    //   opacity: 1,
-                    // }}
                   >
                     {value}
                   </p>

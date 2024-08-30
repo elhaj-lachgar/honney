@@ -31,10 +31,7 @@ function CreateReviewComp({ load, setLoad, productId, value = false }: TProps) {
 
   const CreateReviewHandler = async (params: TReviewCredentials) => {
     if (!value) {
-      const option = toastOption(
-        "error",
-        "you must buy a product and recieved it before leaving review"
-      );
+      const option = toastOption("error", "يمكنك التعليق بعد توصلك بالمنتج");
       toast(option);
       return;
     }
@@ -51,16 +48,16 @@ function CreateReviewComp({ load, setLoad, productId, value = false }: TProps) {
     try {
       const res = await axios.post(url, data, { headers: DEFAULT_HEADER });
       if (res.data?.success) {
-        const option = toastOption("success", "create review successfully");
+        const option = toastOption("success", "شكرا لمراجعتك");
         toast(option);
         setLoad(!load);
       } else {
-        const option = toastOption("error", "create review failed");
+        const option = toastOption("error", "فشل إنشاء المراجعة");
         toast(option);
       }
     } catch (error: any) {
       const err = error.response?.data as TErrorService;
-      const option = toastOption("error", err.error);
+      const option = toastOption("error", err.error || "فشل إنشاء المراجعة");
       toast(option);
     }
     setLoading(false);
@@ -116,7 +113,7 @@ function CreateReviewComp({ load, setLoad, productId, value = false }: TProps) {
         </div>
       ) : (
         <p className="text-sm text-red-500 italic w-full text-center py-2">
-          you must buy a product and recieved it before leaving review
+          {"يمكنك التعليق بعد توصلك بالمنتج"}
         </p>
       )}
     </>

@@ -2,7 +2,7 @@ import { MoveLeft } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useCardContext } from "../context/CardContextProvider";
 import { useEffect, useState } from "react";
-import { TOrder } from "../constant/types";
+import { TErrorService, TOrder } from "../constant/types";
 import { BASE_URL } from "../constant";
 import axios from "axios";
 import { toastOption } from "../lib";
@@ -30,8 +30,9 @@ const ConfirmPage = () => {
         toast(option);
         router(-1);
       }
-    } catch (error) {
-      const option = toastOption("error", "create order failed");
+    } catch (error:any) {
+      const err = error.response?.data as TErrorService;
+      const option = toastOption("error", err.error || "خطأ أثناء العملية ");
       toast(option);
       router(-1);
     }
@@ -66,16 +67,16 @@ const ConfirmPage = () => {
         ) : (
           <>
             <h1 className="text-center text-xl w-11/12 mx-auto md:text-4xl text-yellow-500">
-              Thank you. Your order has been received.
+            لقد تم التوصل بطلبيتك. شكرا لطلبك من ساجا
             </h1>
             <div className="flex flex-col gap-y-4 p-3 md:p-5 border w-11/12 md:w-10/12 md:3/4 mx-auto bg-yellow-50 rounded-md shadow-lg">
-              <h1 className="text-2xl">Order Details</h1>
+              <h1 className="text-2xl">تفاصيل الطلبية</h1>
               <div className="flex flex-col gap-y-2">
                 <hr />
                 <div className="flex w-full px-3">
-                  <p className="flex-[2] md:flex-[5]">Product</p>
-                  <p className="flex-[2]">Quantity</p>
-                  <p className="flex-[2] lg:flex-[3]">Price</p>
+                  <p className="flex-[2] md:flex-[5]">المنتج</p>
+                  <p className="flex-[2]">الكمية</p>
+                  <p className="flex-[2] lg:flex-[3]">الثمن</p>
                 </div>
                 <hr />
               </div>
@@ -93,32 +94,32 @@ const ConfirmPage = () => {
             </div>
             <div className="w-11/12 md:w-10/12 md:3/4 mx-auto flex flex-wrap gap-5">
               <div className="flex flex-col gap-y-3 border bg-yellow-50 p-5 rounded-md shadow-lg ">
-                <h1 className="text-2xl">Order Info</h1>
+                <h1 className="text-2xl">معلومات الطلبية</h1>
                 <div className="flex items-center">
-                  <p className="w-[100px] font-medium">Order Id</p>
+                  <p className="w-[100px] font-medium">رقم الطلبية</p>
                   <p>:{order?._id}</p>
                 </div>
                 <div className="flex items-center">
-                  <p className="w-[100px] font-medium">Date</p>
+                  <p className="w-[100px] font-medium">التاريخ</p>
                   <p>:{order?.createdAt.split("T")[0]}</p>
                 </div>
                 <div className="flex items-center">
-                  <p className="w-[100px] font-medium">Totale</p>
+                  <p className="w-[100px] font-medium">المجموع</p>
                   <p>:{order?.totalePrice + "MAD "}</p>
                 </div>
               </div>
               <div className="flex flex-col min-w-[250px] gap-y-3 border bg-yellow-50 p-5 rounded-md shadow-lg ">
-                <h1 className="text-2xl">Billing Address</h1>
+                <h1 className="text-2xl">العنوان</h1>
                 <div className="flex items-center">
-                  <p className="w-[100px] font-medium">City</p>
+                  <p className="w-[100px] font-medium">المدينة</p>
                   <p>:{order?.address.city}</p>
                 </div>
                 <div className="flex items-center">
-                  <p className="w-[100px] font-medium">Country</p>
-                  <p>morocco</p>
+                  <p className="w-[100px] font-medium">البلد</p>
+                  <p>المغرب</p>
                 </div>
                 <div className="flex items-center">
-                  <p className="w-[100px] font-medium">Postcode </p>
+                  <p className="w-[100px] font-medium">الرقم البريدي </p>
                   <p>:{order?.address?.codePostal || "******"}</p>
                 </div>
               </div>

@@ -22,7 +22,7 @@ function SetConfirmNumber() {
     if (!email) return;
 
     const data = JSON.stringify({ restCode: params.restCode, email });
-    setCheckLoading(true)
+    setCheckLoading(true);
     try {
       const res = await axios.post(url, data, { headers: DEFAULT_HEADER });
       if (res.data.success) {
@@ -30,13 +30,13 @@ function SetConfirmNumber() {
         toast(option);
         router("/forget-password/set-password");
       } else {
-        const message = "Error handler ";
+        const message = "خطأ أثناء العملية ";
         const option = toastOption("error", message);
         toast(option);
       }
     } catch (error: any) {
       const err = error.response?.data as TErrorService;
-      const option = toastOption("error", err.error);
+      const option = toastOption("error", err.error || "خطأ أثناء العملية ");
       toast(option);
     }
     setCheckLoading(false);
@@ -54,13 +54,14 @@ function SetConfirmNumber() {
         toast(option);
         router("/forget-password/rest-code");
       } else {
-        const message = "error hanbande";
+        const message = "خطأ أثناء العملية ";
         const option = toastOption("error", message);
         toast(option);
       }
-    } catch (error) {
-      const message = "error hanbande";
-      const option = toastOption("error", message);
+    } catch (error : any) {
+      const message = "خطأ أثناء العملية ";
+      const err = error?.response?.data as TErrorService;
+      const option = toastOption("error", err.error || message);
       toast(option);
     }
     setLoading(false);
@@ -99,7 +100,7 @@ function SetConfirmNumber() {
           setEmail(email);
         }}
       >
-        {loading ? "...loading" : "resend rest code"}
+        {loading ? "...المرجو الإنتظار" : "اعادة ارسال الرمز"}
       </p>
       <Button
         bg={"#dcb140"}

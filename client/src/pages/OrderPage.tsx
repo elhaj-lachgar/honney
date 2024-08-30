@@ -87,7 +87,7 @@ function OrderPage() {
       }
     } catch (error: any) {
       const err = error.response?.data as TErrorService;
-      const option = toastOption("error", err.error);
+      const option = toastOption("error", err.error || "خطّأ في عملية");
       toast(option);
     }
     setLoading(false);

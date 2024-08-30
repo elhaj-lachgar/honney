@@ -35,19 +35,28 @@ export const signIn = asynchandler(async (req, res, next) => {
 });
 
 export const signUp = asynchandler(async (req, res, next) => {
-  const restCode = Math.floor(100000 + Math.random() * 900000).toString();
-  const hashedCode = crypt.createHash("sha256").update(restCode).digest("hex");
-  const user = await UserModule.create({
-    resetCodeSign: hashedCode,
-    ...req.body,
-  });
-  try {
-    await VerficationMail(user, restCode);
-    return res.status(200).json({ success: true });
-  } catch (error) {
-    await user.deleteOne();
-    return next(new ErrorHandler("خطأ ارسال رمز اعادة التعيين", 404));
+  const user_v = await UserModule.findOne({ email: req.body.email });
+  if (!user_v) {
+    const restCode = Math.floor(100000 + Math.random() * 900000).toString();
+    const hashedCode = crypt
+      .createHash("sha256")
+      .update(restCode)
+      .digest("hex");
+    const user = await UserModule.create({
+      resetCodeSign: hashedCode,
+      ...req.body,
+    });
+    try {
+      await VerficationMail(user, restCode);
+      return res.status(200).json({ success: true });
+    } catch (error) {
+      await user.deleteOne();
+      return next(new ErrorHandler("خطأ ارسال رمز اعادة التعيين", 404));
+    }
   }
+  if (user_v.isValidSign)
+    return next(new ErrorHandler("هذا البريد الإلكتروني مستعمل", 404));
+  return res.status(200).json({ success: true });
 });
 
 export const signOut = asynchandler(async (req, res) => {
@@ -63,7 +72,9 @@ export const googleSignAuth = asynchandler(async (req, res, next) => {
   }).select("-role -password");
 
   if (!user) {
-    req.body.password = Math.floor(100000 + Math.random() * 900000).toString().toString();
+    req.body.password = Math.floor(100000 + Math.random() * 900000)
+      .toString()
+      .toString();
     req.body.isValidSign = true;
     user = await UserModule.create(req.body);
     user.role = undefined;

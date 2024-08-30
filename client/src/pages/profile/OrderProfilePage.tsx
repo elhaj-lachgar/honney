@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { TOrder, TUser } from "../../constant/types";
+import { TErrorService, TOrder, TUser } from "../../constant/types";
 import { BASE_URL } from "../../constant";
 import axios from "axios";
 import { toastOption } from "../../lib";
@@ -23,30 +23,14 @@ function OrderProfilePage() {
         const option = toastOption("error", "خطاء في عملية");
         toast(option);
       }
-    } catch (error) {
-      const option = toastOption("error", "خطاء في عملية");
+    } catch (error:any) {
+      const err = error.response?.data as TErrorService;
+      const option = toastOption("error", err.error || "خطأ أثناء العملية ");
       toast(option);
     }
     setLoading(false);
   };
 
-  // const getOrders = async () => {
-  //   const url = BASE_URL + "/order";
-  //   try {
-  //     const res = await axios.get(url);
-  //     if (res.data?.success) {
-  //       const orders = res.data?.orders;
-  //       setOrders(orders);
-  //     } else {
-  //       const option = toastOption("error", "error fetching");
-  //       toast(option);
-  //     }
-  //   } catch (error) {
-  //     const option = toastOption("error", "error fetching");
-  //     toast(option);
-  //   }
-  //   setLoading(false);
-  // };
 
   useEffect(() => {
     getUser();

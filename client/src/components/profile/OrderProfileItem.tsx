@@ -16,7 +16,7 @@ function OrderProfileItem({ order }: { order: TOrder }) {
       <hr />
       <div className="flex flex-col gap-y-2.5">
         <p className="flex gap-x-2">
-          Order_Id :<p className="text-red-500">{order._id}</p>
+         رقم الطلبة :<p className="text-red-500">{order._id}</p>
         </p>
         <div className=" flex flex-wrap gap-2.5">
           {order.products.map((product) => (
@@ -34,14 +34,14 @@ function OrderProfileItem({ order }: { order: TOrder }) {
           ))}
         </div>
         <p className="flex gap-x-2">
-          totalePrice:
+         المجموع:
           <b>{order.totalePrice + order.currency}</b>
         </p>
         <p>
           {order.isDelaiverd ? (
-            <p className="text-green-500">Order is delaiverd</p>
+            <p className="text-green-500">تم التوصل بالطلب</p>
           ) : (
-            <p className="text-red-500">order not delvaired yet..</p>
+            <p className="text-red-500">قيد التوصيل</p>
           )}
         </p>
       </div>

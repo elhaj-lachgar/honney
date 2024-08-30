@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 
 const ReviewCredentials = z.object({
-    content : z.string().min(1,{message:"content is required"}),
+    content : z.string().min(1,{message:"الرجاء وضع مراجعتك"}),
 });
 
 export type TReviewCredentials = z.infer<typeof ReviewCredentials>;

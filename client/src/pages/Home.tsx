@@ -4,7 +4,7 @@ import Card from "../components/Card";
 import Categorys from "../components/Categorys";
 import Footer from "../components/Footer";
 import { toastOption } from "../lib";
-import { TProductService } from "../constant/types";
+import { TErrorService, TProductService } from "../constant/types";
 import { BASE_URL } from "../constant";
 import { Skeleton, useToast } from "@chakra-ui/react";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -40,8 +40,9 @@ function Home() {
           }
         })
         .finally(() => setLoading(false));
-    } catch (error) {
-      const option = toastOption("error", "featching error");
+    } catch (error:any) {
+      const err = error.response?.data as TErrorService;
+      const option = toastOption("error", err.error || "خطأ أثناء العملية ");
       toast(option);
     }
   };
@@ -58,7 +59,7 @@ function Home() {
         <Banner />
         <Categorys />
         <div className="flex flex-col w-11/12 gap-y-1 mx-auto">
-          <p className="text-gray-500 text-sm">منتجات شائعة في متتج</p>
+          <p className="text-gray-500 text-sm">منتجات شائعة في المتجر</p>
           <h1 className="text-2xl font-serif flex items-center gap-x-1">
             منتجات
             <span className="border-b-[2px] border-[#dcb140]">رائجة</span>

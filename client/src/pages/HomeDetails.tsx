@@ -4,7 +4,7 @@ import { Heart, ShoppingBasket } from "lucide-react";
 import StarRating from "react-star-ratings";
 import Card from "../components/Card";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { TProductService } from "../constant/types";
+import { TErrorService, TProductService } from "../constant/types";
 import { useEffect, useState } from "react";
 import { useWishListContext } from "../context/WishListContextProvider";
 import { useCardContext } from "../context/CardContextProvider";
@@ -43,8 +43,9 @@ function HomeDetails() {
         setRelated(Object_data.related);
         setReviewValue(Object_data.value);
       }
-    } catch (error) {
-      const option = toastOption("error", "error fetching");
+    } catch (error:any) {
+      const err = error.response?.data as TErrorService;
+      const option = toastOption("error", err.error || "خطأ أثناء العملية ");
       toast(option);
     }
   };
@@ -379,9 +380,9 @@ function HomeDetails() {
               className="w-44 md:w-56 lg:w-64"
               alt="not found page"
             />
-            <p className="md:text-xl text-red-500 ">Product Not Found</p>
+            <p className="md:text-xl text-red-500 ">المنتح غير موجود</p>
             <Link to="/" className="hover:underline text-yellow-500">
-              Go Back Home
+              العودة إلى المتجر
             </Link>
           </div>
         )}

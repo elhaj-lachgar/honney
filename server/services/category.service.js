@@ -1,8 +1,6 @@
 import CategoryModule from "../modules/category.module.js";
 import expressAsyncHandler from "express-async-handler";
 import {
-  CreateDoucement,
-  UpdateDoucement,
   getDoucement,
 } from "./factory.service.js";
 

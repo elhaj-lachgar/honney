@@ -19,8 +19,8 @@ import { TErrorService } from "../../constant/types";
 import { useState } from "react";
 
 function setEmail() {
-  const router = useNavigate(); 
-  const [loading , setLoading ] = useState(false);
+  const router = useNavigate();
+  const [loading, setLoading] = useState(false);
   const toast = useToast();
   const setEmail = async (params: TSetEmailCredentials) => {
     const url = BASE_URL + "/auth/set-email";
@@ -34,13 +34,13 @@ function setEmail() {
         toast(option);
         router("/forget-password/rest-code");
       } else {
-        const error = res.data as TErrorService
-        const option = toastOption("error", error.error);
+        const message = "خطأ أثناء العملية ";
+        const option = toastOption("error", message);
         toast(option);
       }
-    } catch (error : any) {
-      const err = error.response?.data as TErrorService 
-      const option = toastOption("error", err.error);
+    } catch (error: any) {
+      const err = error.response?.data as TErrorService;
+      const option = toastOption("error", err.error || "خطأ أثناء العملية ");
       toast(option);
     }
     setLoading(false);
@@ -80,7 +80,7 @@ function setEmail() {
       </div>
 
       <p className="text-gray-400 text-sm px-3">
-        please check your email address , you will find rest code
+       الرجاء تفقد بريدك الإلكتروني
       </p>
       <Button
         bg={"#dcb140"}

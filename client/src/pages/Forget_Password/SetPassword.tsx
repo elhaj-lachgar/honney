@@ -56,11 +56,13 @@ function SetPassword() {
         window.localStorage.removeItem("set-email");
         router("/auth/sign-in");
       } else {
-        const option = toastOption("error", "error message");
+        const message = "خطأ أثناء العملية ";
+        const option = toastOption("error", message);
         toast(option);
       }
     } catch (error) {
-      const option = toastOption("error", "error message");
+      const message = "خطأ أثناء العملية ";
+      const option = toastOption("error", message);
       toast(option);
     }
     setLoading(false);

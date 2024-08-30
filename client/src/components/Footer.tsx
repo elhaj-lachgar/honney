@@ -10,19 +10,20 @@ const Footer = () => {
           <div className="flex flex-col gap-y-2">
             {CONTACT.map((contact) => (
               <a
+                
                 target="_blank"
                 href={contact.href}
                 key={contact.name}
                 className="flex items-center gap-x-3"
               >
                 <contact.icon className="size-8 p-1 rounded-md bg-green-950 " />
-                {contact.value}
+                 <span dir="ltr">{contact.value}</span>
               </a>
             ))}
           </div>
         </div>
         <div className="flex flex-col gap-y-2 md:flex-1 ">
-          <h1 className="text-2xl">تصنفات</h1>
+          <h1 className="text-2xl">تصنيفات</h1>
           <div className="flex flex-col gap-y-2">
             {FIRST_NAVBAR.map((item, i) => (
               <a

@@ -26,6 +26,6 @@ export const CreateOrder = asynchandler(async (req, res, next) => {
 
 export const getOrder = asynchandler ( async (req , res , next ) => {
   const order  = await OrderModule.findOne({_id:req.params.orderId}).populate("products.product address");
-  if(!order) return next( new ErrorHandler('Order not found' , 404));
+  if(!order) return next( new ErrorHandler("طلبية لاتوجد" , 404));
   return res.status(200).json({order , success : true})
 });
