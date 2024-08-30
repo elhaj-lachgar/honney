@@ -24,13 +24,16 @@ function ContactUs() {
           <h1 className="font-bold text-2xl">عناوين التواصل</h1>
           <div className="flex flex-wrap justify-center gap-5 w-11/12 md:w-9/12 lg:w-[700px] mx-auto">
             {CONTACT.map((contact) => (
-              <div
+              <a
+                href={contact.href}
+                target="_blank"
+                dir="ltr"
                 className="p-4 w-[200px] shadow-md flex border items-center rounded-md flex-col gap-y-2 justify-center"
                 key={contact.name}
               >
                 <contact.icon className="text-yellow-500" />
                 <h1>{contact.value}</h1>
-              </div>
+              </a>
             ))}
           </div>
         </div>

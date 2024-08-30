@@ -4,7 +4,6 @@ import {
   getDoucement,
 } from "./factory.service.js";
 import UserModule from "../modules/user.module.js";
-
 import jwt from "jsonwebtoken";
 
 
@@ -22,7 +21,7 @@ export const getProducts = expressAsyncHandler(async (req, res) => {
     query.category = value.split(",");
   }
   if (req.query?.keyword) {
-    const query = {};
+    query.$or = [{ name : { $regex: req.query?.keyword, $options: "i" } }];
   }
   const products = await ProductModule.find(query).limit(6);
   return res.status(200).json({ products, success: true });

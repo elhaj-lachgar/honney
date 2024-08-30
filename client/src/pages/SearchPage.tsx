@@ -75,6 +75,8 @@ function SearchPage() {
     } else if (searchId) {
       url = url + "?category=" + searchId;
     }
+    if (keyword && _category) url = url + "&keyword=" + keyword;
+    else if (keyword) url = url + "?keyword=" + keyword;
     try {
       setLoading(true);
       fetch(url)
@@ -220,7 +222,7 @@ function SearchPage() {
                         color={"white"}
                         onClick={() => {
                           if (!category_) return;
-                          getProducts(category_, "", true);
+                          getProducts(category_, keyword, true);
                           onClose();
                         }}
                       >
@@ -382,7 +384,7 @@ function SearchPage() {
                           <FilterCard product={product} />
                         </div>
                         <div className="block lg:hidden  ">
-                          <Card product={product}/>
+                          <Card product={product} />
                         </div>
                       </Fragment>
                     ))}

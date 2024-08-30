@@ -14,6 +14,7 @@ import { TErrorService } from "../../constant/types";
 function SetConfirmNumber() {
   const router = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [checkLoading, setCheckLoading] = useState(false);
   const toast = useToast();
   const checkRestCode = async (params: TCheckRestCodeCredentials) => {
     const url = BASE_URL + "/auth/check-rest";
@@ -21,6 +22,7 @@ function SetConfirmNumber() {
     if (!email) return;
 
     const data = JSON.stringify({ restCode: params.restCode, email });
+    setCheckLoading(true)
     try {
       const res = await axios.post(url, data, { headers: DEFAULT_HEADER });
       if (res.data.success) {
@@ -32,11 +34,12 @@ function SetConfirmNumber() {
         const option = toastOption("error", message);
         toast(option);
       }
-    } catch (error : any) {
-      const err = error.response?.data as TErrorService 
+    } catch (error: any) {
+      const err = error.response?.data as TErrorService;
       const option = toastOption("error", err.error);
       toast(option);
     }
+    setCheckLoading(false);
   };
 
   const setEmail = async (email: string) => {
@@ -106,6 +109,7 @@ function SetConfirmNumber() {
         width={"100%"}
         color={"white"}
         type="submit"
+        isLoading={checkLoading}
       >
         إرسال
       </Button>

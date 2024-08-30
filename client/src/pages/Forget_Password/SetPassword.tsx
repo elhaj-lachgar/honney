@@ -23,6 +23,7 @@ function SetPassword() {
   const [confirmPasswordView, setConfirmPasswordView] = useState(true);
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorConfirmPassword, setErrorConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const toast = useToast();
   const {
     formState: { errors },
@@ -46,6 +47,7 @@ function SetPassword() {
       new_password: params.new_password,
       confirm_password: confirmPassword,
     });
+    setLoading(true);
     try {
       const res = await axios.post(url, data, { headers: DEFAULT_HEADER });
       if (res.data.success) {
@@ -61,7 +63,7 @@ function SetPassword() {
       const option = toastOption("error", "error message");
       toast(option);
     }
-
+    setLoading(false);
     setErrorConfirmPassword("");
   };
 
@@ -133,6 +135,7 @@ function SetPassword() {
         width={"100%"}
         color={"white"}
         type="submit"
+        isLoading={loading}
       >
         إرسال
       </Button>

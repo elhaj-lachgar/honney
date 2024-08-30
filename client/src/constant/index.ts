@@ -43,23 +43,6 @@ export const SECOND_NAVBAR = [
   },
 ];
 
-export const CONTACT_INFO = [
-  {
-    info: "1734 Stonecoal Road",
-    icon: MapPin,
-    name: "location",
-  },
-  {
-    info: "+021-95-51-84",
-    icon: Phone,
-    name: "phone",
-  },
-  {
-    info: "email@email.com",
-    icon: Mail,
-    name: "email",
-  },
-];
 
 export const CATEGORY = [
   {
@@ -114,8 +97,6 @@ export const SIDE_BAR_ADMIN = [
   },
 ];
 
-
-
 export const BASE_URL = "/api/v1";
 
 export const PROFILE_SIDE_BAR = [
@@ -149,17 +130,20 @@ export const CONTACT = [
   {
     name: "address",
     icon: MapPin,
-    value: "address",
+    value: "قلعة مكونة",
+    href: "https://www.google.com/maps/place/31%C2%B015'36.2%22N+6%C2%B004'14.8%22W/@31.259552,-6.072453,19z/data=!4m4!3m3!8m2!3d31.2600556!4d-6.0707778?hl=en&entry=ttu&g_ep=EgoyMDI0MDgyNy4wIKXMDSoASAFQAw%3D%3D",
   },
   {
     name: "email",
     icon: Mail,
-    value: "email@example.com",
+    value: "contact.sajacoop.com",
+    href: "mailto:contact.sajacoop.com@gmail.com",
   },
   {
     name: "phone",
     icon: Phone,
-    value: "+021-95-51-84",
+    value: "+212 672-739084",
+    href: "tel:+212672739084",
   },
 ];
 

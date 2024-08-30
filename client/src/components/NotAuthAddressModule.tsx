@@ -184,6 +184,13 @@ function AdressModule({ load, setLoad }: TProps) {
                 placeholder="13100"
                 {...register("codePostal")}
               />
+              {
+                errors.codePostal && (
+                  <p className="text-red-500 italic text-sm">
+                    {errors.codePostal.message}
+                  </p>
+                )
+              }
             </div>
             <Button
               type="submit"

@@ -16,13 +16,16 @@ import {
 } from "../../validator/set-email-validator";
 import { useForm } from "react-hook-form";
 import { TErrorService } from "../../constant/types";
+import { useState } from "react";
 
 function setEmail() {
-  const router = useNavigate();
+  const router = useNavigate(); 
+  const [loading , setLoading ] = useState(false);
   const toast = useToast();
   const setEmail = async (params: TSetEmailCredentials) => {
     const url = BASE_URL + "/auth/set-email";
     const data = JSON.stringify({ email: params.email });
+    setLoading(true);
     try {
       const res = await axios.post(url, data, { headers: DEFAULT_HEADER });
       if (res.data.success) {
@@ -40,6 +43,7 @@ function setEmail() {
       const option = toastOption("error", err.error);
       toast(option);
     }
+    setLoading(false);
   };
 
   const {
@@ -85,6 +89,7 @@ function setEmail() {
         }}
         type="submit"
         width={"100%"}
+        isLoading={loading}
         color={"white"}
       >
         إرسال

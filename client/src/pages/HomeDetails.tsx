@@ -3,7 +3,7 @@ import { toastOption } from "../lib";
 import { Heart, ShoppingBasket } from "lucide-react";
 import StarRating from "react-star-ratings";
 import Card from "../components/Card";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { TProductService } from "../constant/types";
 import { useEffect, useState } from "react";
 import { useWishListContext } from "../context/WishListContextProvider";
@@ -367,18 +367,23 @@ function HomeDetails() {
               <div className="  grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 content-center justify-center gap-5  py-4 mx-auto w-11/12 ">
                 {related.map((product_info) => {
                   if (product_info._id == id) return null;
-                  return (
-                    <Card
-                      product={product_info}
-                      key={product_info._id}
-                    />
-                  );
+                  return <Card product={product_info} key={product_info._id} />;
                 })}
               </div>
             </div>
           </div>
         ) : (
-          <div className="flex items-center justify-center">Not Found</div>
+          <div className="flex flex-col items-center justify-center h-screen">
+            <img
+              src="/NotFound/product.png"
+              className="w-44 md:w-56 lg:w-64"
+              alt="not found page"
+            />
+            <p className="md:text-xl text-red-500 ">Product Not Found</p>
+            <Link to="/" className="hover:underline text-yellow-500">
+              Go Back Home
+            </Link>
+          </div>
         )}
       </div>
     </>

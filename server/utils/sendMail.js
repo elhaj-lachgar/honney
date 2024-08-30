@@ -38,8 +38,8 @@ export const OrderMail = async (order, user) => {
     secure: false,
 
     auth: {
-      user: "purchasesaja.com@gmail.com",
-      pass: "iblv zzni itvm muzg",
+      user: "order.sajacoop.com@gmail.com",
+      pass: "eowv jcxa ubyb ffai",
     },
   });
 
@@ -66,8 +66,8 @@ export const OrderClientMail = async (order, user, email) => {
     secure: false,
 
     auth: {
-      user: "purchasesaja.com@gmail.com",
-      pass: "iblv zzni itvm muzg",
+      user: "purchase.sajacoop.com@gmail.com",
+      pass: "azer qoxj pztv sgrx",
     },
   });
 
