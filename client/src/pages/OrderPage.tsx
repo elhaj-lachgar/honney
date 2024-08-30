@@ -10,6 +10,7 @@ import { BASE_URL, DEFAULT_HEADER } from "../constant";
 import axios from "axios";
 import { TAddress, TErrorService, TOrder } from "../constant/types";
 import { Helmet } from "react-helmet";
+import NotAuthAddressModule from "../components/NotAuthAddressModule";
 
 function OrderPage() {
   const { card } = useCardContext();
@@ -138,7 +139,11 @@ function OrderPage() {
           </div>
           <hr />
           <div className="w-full  p-2">
-            <AdressModule load={load} setLoad={setLoad} />
+            {authUser ? (
+              <AdressModule load={load} setLoad={setLoad} />
+            ) : (
+              <NotAuthAddressModule load={load} setLoad={setLoad} />
+            )}
           </div>
         </div>
         <div className="flex flex-col h-fit  gap-y-3 lg:w-1/3 w-full p-2  border rounded shadow">

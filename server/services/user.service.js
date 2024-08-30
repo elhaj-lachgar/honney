@@ -64,10 +64,6 @@ export const GetUser = expressAsyncHandler(async (req, res) => {
   return res.status(200).json({ user, success: true });
 });
 
-export const GetUsers = expressAsyncHandler(async (req, res) => {
-  const users = await UserModule.find({}).select("-password");
-  return res.status(200).json({ users, success: true });
-});
 
 export const getUserReview = expressAsyncHandler(async (req, res) => {
   const user = await UserModule.findOne({ _id: req.params.userId }).select(

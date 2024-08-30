@@ -8,12 +8,6 @@ import HomeDetails from "./pages/HomeDetails";
 import ShoppingCart from "./pages/ShoppingCart";
 import SearchPage from "./pages/SearchPage";
 import About from "./pages/About";
-import CreateProductPage from "./pages/admin/CreateProductPage";
-import AdminLayout from "./layouts/AdminLayout";
-import UploadProductImage from "./pages/admin/UploadProductImage";
-import UpdateProductPage from "./pages/admin/UpdateProductPage";
-import AdminProductDetails from "./pages/admin/AdminProductDetails";
-import Users from "./pages/admin/Users";
 import OrderPage from "./pages/OrderPage";
 import ProfileLayout from "./layouts/ProfileLayout";
 import ProfilePage from "./pages/profile/ProfilePage";
@@ -24,14 +18,9 @@ import SetConfirmNumber from "./pages/Forget_Password/SetConfirmNumber";
 import SetPassword from "./pages/Forget_Password/SetPassword";
 import EditProfile from "./pages/profile/EditProfile";
 import { useAuthContext } from "./context/AuthContextProvider";
-import CreateCategoryPage from "./pages/admin/CreateCategoryPage";
 import axios from "axios";
 import ContactUs from "./pages/ContactUs";
 import NotFoundPage from "./pages/NotFoundPage";
-import OrderAdminPage from "./pages/admin/OrderAdminPage";
-import UpdateCategoryPage from "./pages/admin/UpdateCategoryPage";
-import AdminDetailsCategory from "./pages/admin/AdminDetailsCategory";
-import BannerAdmin from "./pages/admin/BannerAdmin";
 import OrderProfilePage from "./pages/profile/OrderProfilePage";
 
 function App() {
@@ -159,58 +148,6 @@ function App() {
           ) : (
             <Navigate to={"/"} />
           )
-        }
-      />
-      <Route
-        path="/admin/create-product"
-        element={<AdminLayout children={<CreateProductPage />} />}
-      />
-      <Route
-        path="/admin/create-product/upload-images/:id"
-        element={<UploadProductImage />}
-      />
-      <Route
-        path="/admin/update-product"
-        element={<AdminLayout children={<UpdateProductPage />} />}
-      />
-      <Route
-        path="/admin/update-product/:id"
-        element={<AdminProductDetails />}
-      />
-      <Route
-        path="/admin/users"
-        element={<AdminLayout children={<Users />} />}
-      />
-      <Route
-        path="/admin/create-category"
-        element={<AdminLayout children={<CreateCategoryPage />} />}
-      />
-      <Route
-        path="/admin/orders"
-        element={
-          <AdminLayout>
-            <OrderAdminPage />
-          </AdminLayout>
-        }
-      />
-      <Route
-        path="/admin/update-category"
-        element={
-          <AdminLayout>
-            <UpdateCategoryPage />
-          </AdminLayout>
-        }
-      />
-      <Route
-        path="/admin/update-category/:id"
-        element={<AdminDetailsCategory />}
-      />
-      <Route
-        path="/admin/banner"
-        element={
-          <AdminLayout>
-            <BannerAdmin />
-          </AdminLayout>
         }
       />
       <Route

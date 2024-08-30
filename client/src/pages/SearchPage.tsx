@@ -382,7 +382,7 @@ function SearchPage() {
                           <FilterCard product={product} />
                         </div>
                         <div className="block lg:hidden  ">
-                          <Card product={product} isAdmin={false} />
+                          <Card product={product}/>
                         </div>
                       </Fragment>
                     ))}

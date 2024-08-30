@@ -73,7 +73,7 @@ function Home() {
             </>
           ) : (
             products.map((product) => (
-              <Card product={product} isAdmin={false} key={product._id} />
+              <Card product={product} key={product._id} />
             ))
           )}
         </div>

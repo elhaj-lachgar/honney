@@ -6,32 +6,17 @@ import { useWishListContext } from "../context/WishListContextProvider";
 import { Button } from "@chakra-ui/react";
 import StarRatings from "react-star-ratings";
 
-function Card({
-  product,
-  isAdmin,
-}: {
-  product: TProductService;
-  isAdmin: boolean;
-}) {
+function Card({ product }: { product: TProductService }) {
   const { card, addToCard } = useCardContext();
   const { products, addProduct, deleteProduct } = useWishListContext();
   const isExiste =
     card.products.findIndex((pr) => pr.product._id == product._id) > -1;
   const isLiked = products.findIndex((pr) => pr._id == product._id) > -1;
 
-
   return (
-    <motion.div
-      className="flex flex-col  gap-y-3 border  rounded-md hover:shadow-lg  group items-center p-4 min-w-[300px] max-w-[400px]  "
-    >
+    <motion.div className="flex flex-col  gap-y-3 border  rounded-md hover:shadow-lg  group items-center p-4 min-w-[300px] max-w-[400px]  ">
       <div className="relative w-full group ">
-        <a
-          href={
-            !isAdmin
-              ? "/" + product._id
-              : "/admin/update-product/" + product._id
-          }
-        >
+        <a href={"/" + product._id}>
           <img
             src={product.imageUrls[0]}
             alt="image of product"
@@ -52,83 +37,6 @@ function Card({
             deleteProduct(product);
           }}
         />
-        {/* <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          transition={{
-            duration: 0.3,
-          }}
-          whileInView={{
-            opacity: 0.8,
-            height: "35%",
-          }}
-          className="absolute w-full h-[35%] bottom-0  bg-gray-50  opacity-80 hidden group-hover:flex items-center justify-center gap-x-3 "
-        >
-          <motion.span
-            initial={{
-              opacity: 0.6,
-            }}
-            transition={{
-              duration: 0.5,
-            }}
-            whileHover={{
-              opacity: 1,
-            }}
-            whileTap={{
-              scale: 0,
-            }}
-            className="bg-color rounded flex items-center justify-center size-7 opacity-60 cursor-pointer  p-1 text-white"
-            onClick={() => router("/search/1")}
-          >
-            <Search />
-          </motion.span>
-          <motion.span
-            initial={{
-              opacity: 0.6,
-            }}
-            transition={{
-              duration: 0.5,
-            }}
-            whileHover={{
-              opacity: 1,
-            }}
-            whileTap={{
-              scale: 0,
-            }}
-            onClick={() => {
-              if (!isExiste) {
-                addProductToCard({ ...product, quantity: 1 });
-              }
-            }}
-            className="bg-color flex items-center justify-center size-7 opacity-60  rounded cursor-pointer  p-1 text-white"
-          >
-            <ShoppingBag />
-          </motion.span>
-
-          <motion.span
-            initial={{
-              opacity: 0.6,
-            }}
-            transition={{
-              duration: 0.5,
-            }}
-            whileHover={{
-              opacity: 1,
-            }}
-            whileTap={{
-              scale: 0,
-            }}
-            className="bg-color flex items-center rounded justify-center size-7 opacity-60 cursor-pointer  p-1 text-white"
-            onClick={() => {
-              if (!isLiked) {
-                addProduct(product);
-                return;
-              }
-              deleteProduct(product);
-            }}
-          >
-            <Heart />
-          </motion.span>
-        </motion.div> */}
       </div>
       <div className="flex flex-col font-serif  w-full ">
         <h1 className="text-lg">{product.name}</h1>
@@ -160,8 +68,8 @@ function Card({
           leftIcon={<ShoppingBasket />}
           onClick={() => {
             if (!isExiste) {
-              if(product.productQuantity.length <= 0 ) return;
-              addToCard(product , product.productQuantity[0]);
+              if (product.productQuantity.length <= 0) return;
+              addToCard(product, product.productQuantity[0]);
             }
           }}
         >

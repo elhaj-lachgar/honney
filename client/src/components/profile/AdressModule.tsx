@@ -2,7 +2,7 @@ import {
   Button,
   Input,
   InputGroup,
-  InputLeftElement,
+  InputLeftAddon,
   Modal,
   ModalContent,
   ModalOverlay,
@@ -10,13 +10,17 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { Mail, User, X } from "lucide-react";
+import { X } from "lucide-react";
 import { useRef, useState } from "react";
-import { useAuthContext } from "../../context/AuthContextProvider";
+import {
+  resolver,
+  TCreateAddressCredentials,
+} from "../../validator/create-address-auth-validator";
 import { BASE_URL, DEFAULT_HEADER } from "../../constant";
 import { toastOption } from "../../lib";
 import axios from "axios";
 import Citys from "../../lib/city.json";
+import { useForm } from "react-hook-form";
 
 type TProps = {
   load: boolean;
@@ -26,58 +30,25 @@ type TProps = {
 function AdressModule({ load, setLoad }: TProps) {
   const { onClose, onOpen, isOpen } = useDisclosure();
   const btnRef = useRef<null | HTMLInputElement>(null);
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [city, setCity] = useState("");
-  const [codePostal, setCodePostal] = useState(0);
-  const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { authUser } = useAuthContext();
   const toast = useToast();
-  const CreateAddressNotAuth = async (params: {
-    email: string;
-    phone: string;
-    name: string;
-    city: string;
-    codePostal?: number;
-  }) => {
-    setLoading(true);
-    const url = `${BASE_URL}/address/create-address-not-auth`;
-    try {
-      const data = JSON.stringify(params);
-      const res = await axios.post(url, data, { headers: DEFAULT_HEADER });
-      const Object_data = res.data;
-      if (Object_data.success) {
-        const addresses  = [
-          ...((JSON.parse(
-            window.localStorage.getItem("addresses") as string
-          ) as string []) || []),
-        ];
-        addresses.push(Object_data.address._id);
-        window.localStorage.setItem("addresses", JSON.stringify(addresses));
-        setLoad(!load);
-        const option = toastOption("success", " تم إضافة العنوان");
-        toast(option);
-        onClose();
-      } else {
-        const option = toastOption("error", "خطّأ في عملية");
-        toast(option);
-      }
-    } catch (error) {
-      const option = toastOption("error", "خطّأ في عملية");
-      toast(option);
-    }
-  };
 
-  const CreateAddressAuth = async (params: {
-    phone: string;
-    city: string;
-    codePostal: number;
-  }) => {
+  const {
+    formState: { errors },
+    handleSubmit,
+    register,
+  } = useForm<TCreateAddressCredentials>({
+    resolver,
+  });
+
+  const CreateAddressAuth = async (params: TCreateAddressCredentials) => {
     setLoading(true);
     const url = `${BASE_URL}/address/create-address-auth`;
-    const data = JSON.stringify(params);
+    const data = JSON.stringify({
+      ...params,
+      codePostal: parseInt(params?.codePostal || ""),
+    });
     try {
       const res = await axios.post(url, data, { headers: DEFAULT_HEADER });
       const Object_data = res.data;
@@ -94,6 +65,7 @@ function AdressModule({ load, setLoad }: TProps) {
       const option = toastOption("error", "خطّأ في عملية");
       toast(option);
     }
+    setLoading(true);
   };
 
   return (
@@ -120,78 +92,55 @@ function AdressModule({ load, setLoad }: TProps) {
             />
           </div>
           <hr />
-          <div className="flex flex-col gap-y-4 p-3">
-            {!authUser && (
-              <>
-                <div className="flex flex-col gap-y-0.5 ">
-                  <label htmlFor="email" className="flex ">
-                    البريد <span className="text-red-500">*</span>
-                  </label>
-                  <InputGroup>
-                    <InputLeftElement>
-                      <Mail />
-                    </InputLeftElement>
-                    <Input
-                      type="email"
-                      placeholder="أدخل بريد ..."
-                      onChange={(e) => setEmail(e.currentTarget.value)}
-                    />
-                  </InputGroup>
-                </div>
-                <div className="flex flex-col gap-y-0.5">
-                  <label htmlFor="email">
-                    ‌الأسم <span className="text-red-500">*</span>
-                  </label>
-                  <InputGroup>
-                    <InputLeftElement>
-                      <User />
-                    </InputLeftElement>
-                    <Input
-                      type="text"
-                      placeholder="أدخل الأسم..."
-                      onChange={(e) => setName(e.currentTarget.value)}
-                    />
-                  </InputGroup>
-                </div>
-              </>
-            )}
+          <form
+            onSubmit={handleSubmit(CreateAddressAuth)}
+            className="flex flex-col gap-y-4 p-3"
+          >
             <div className="flex flex-col gap-y-0.5 ">
               <label className="text-xl flex items-center">
                 {" "}
                 هاتف <span className="text-red-500">*</span>
               </label>
-              <div dir="ltr" className="flex items-center gap-x-2">
-                +212
+              <InputGroup dir="ltr">
+                <InputLeftAddon>+212</InputLeftAddon>
                 <Input
                   type="number"
-                  placeholder="600000000"
-                  onChange={(e) => setPhone(e.currentTarget.value)}
+                  placeholder="ex.600000000"
+                  {...register("phone")}
                 />
-              </div>
+              </InputGroup>
+              {errors.phone && (
+                <p className="text-red-500 italic text-sm">
+                  {errors.phone.message}
+                </p>
+              )}
             </div>
             <div className="flex flex-col gap-y-0.5">
               <label className="flex items-center">
                 المدينة<span className="text-red-500">*</span>
               </label>
-              <Select
-                dir="ltr"
-                onChange={(e) => setCity(e.currentTarget.value)}
-              >
+              <Select dir="ltr" {...register("city")}>
                 {Citys.map((city) => (
                   <option value={city.ville}>{city.ville}</option>
-                ))}              
-            </Select>
+                ))}
+              </Select>
+              {errors.city && (
+                <p className="text-red-500 italic text-sm">
+                  {errors.city.message}
+                </p>
+              )}
             </div>
-      
+
             <div className="flex flex-col gap-y-0.5">
               <label>رقم</label>
               <Input
                 type="number"
                 placeholder="13100"
-                onChange={(e) => setCodePostal(parseInt(e.currentTarget.value))}
+                {...register("codePostal")}
               />
             </div>
             <Button
+              type="submit"
               bg={"#dcb140"}
               _hover={{
                 backgroundColor: "#F9C349",
@@ -199,26 +148,10 @@ function AdressModule({ load, setLoad }: TProps) {
               isLoading={loading}
               width={"100%"}
               color={"white"}
-              onClick={() => {
-                const obj = {
-                  phone,
-                  codePostal,
-                  city,
-                };
-                if (authUser) {
-                  if (!phone || !city ) return;
-                  CreateAddressAuth(obj).finally(() => setLoading(false));
-                  return;
-                }
-                if (!phone || !city || !email) return;
-                CreateAddressNotAuth({ ...obj, email, name }).finally(() =>
-                  setLoading(false)
-                );
-              }}
             >
               حفظ
             </Button>
-          </div>
+          </form>
         </ModalContent>
       </Modal>
     </>

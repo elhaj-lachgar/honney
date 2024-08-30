@@ -5,7 +5,6 @@ import {
   UpdateProfile,
   DeleteAvatar,
   GetUser,
-  GetUsers,
   getUserReview,
   UpdateRole,
 } from "../services/user.service.js";
@@ -22,7 +21,6 @@ import { SingleCloudHandler } from "../middlewares/cloud-handler.js";
 
 const router = Router();
 
-router.get("/get-users", GetUsers);
 
 router.put(
   "/change-avatar",

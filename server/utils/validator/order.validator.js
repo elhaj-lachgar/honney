@@ -1,6 +1,7 @@
 import { check } from "express-validator";
 import ValidatorMiddleware from "../../middlewares/validator-middleware.js";
 import ProductModule from "../../modules/product.module.js";
+
 export const CreateOrderValidator = [
   check("address")
     .notEmpty()
@@ -39,29 +40,13 @@ export const CreateOrderValidator = [
   ValidatorMiddleware,
 ];
 
-export const DelaiverdOrderValidator = [
-  check("orderId")
-    .notEmpty()
-    .withMessage("المرجو ادخال محدد الطلبية")
-    .isMongoId()
-    .withMessage("محدد الطلبية غير صالح"),
 
-  check("Delaiverd")
-    .optional()
-    .custom((value, { req }) => {
-      const date = new Date(value);
-      req.body.Delaiverd_At = date;
-      return true;
-    }),
 
-  ValidatorMiddleware,
-];
-
-export const DeleteOrderValidator = [
-  check("orderId")
-    .notEmpty()
-    .withMessage("المرجو ادخال محدد الطلبية")
-    .isMongoId()
-    .withMessage("محدد الطلبية غير صالح"),
-  ValidatorMiddleware,
-];
+export const getOrderValidator = [
+  check('orderId')
+  .notEmpty()
+  .withMessage('orderId is required')
+  .isMongoId()
+  .withMessage('orderId not Valid'),
+  ValidatorMiddleware
+]

@@ -371,7 +371,6 @@ function HomeDetails() {
                     <Card
                       product={product_info}
                       key={product_info._id}
-                      isAdmin={false}
                     />
                   );
                 })}
