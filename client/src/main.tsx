@@ -11,6 +11,7 @@ import AuthContextProvider from "./context/AuthContextProvider.tsx";
 import CategoryContextProvider from "./context/CategoryContextProvider.tsx";
 import ProductNameContext from "./context/ProductNameContext.tsx";
 import AddressContextProvider from "./context/AddressContextProvider.tsx";
+import HomeProductContextProvider from "./context/HomeProductContext.tsx";
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <BrowserRouter>
@@ -22,7 +23,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
                 <CategoryContextProvider>
                   <ProductNameContext>
                     <AddressContextProvider>
-                      <App />
+                      <HomeProductContextProvider>
+                        <App />
+                      </HomeProductContextProvider>
                     </AddressContextProvider>
                   </ProductNameContext>
                 </CategoryContextProvider>
