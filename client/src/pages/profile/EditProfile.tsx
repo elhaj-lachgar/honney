@@ -70,9 +70,11 @@ function EditProfile() {
         <form className="p-4 flex flex-col w-11/12 gap-y-4 border rounded-md shadow-md md:w-[400px]">
           <h1 className="font-serif text-2xl">تغير الملف</h1>
           <div className="flex flex-col gap-y-1">
-            <label>الاسم</label>
+            <label htmlFor="name">الاسم</label>
             <Input
               defaultValue={name}
+              id="name"
+              name="name"
               onChange={(e) => {
                 const {
                   currentTarget: { value },

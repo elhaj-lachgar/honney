@@ -1,6 +1,11 @@
-import { CONTACT, FIRST_NAVBAR } from "../constant";
+import { CONTACT } from "../constant";
+import { Skeleton } from "@chakra-ui/react";
+import { useCategoryContext } from "../context/CategoryContextProvider";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
+  const { categoryLoading, categorys } = useCategoryContext();
+
   return (
     <footer className="flex flex-col">
       <div className="flex flex-col md:flex-row justify-between  py-4 gap-y-4 px-3 md:p-5 bg-black text-white">
@@ -10,14 +15,15 @@ const Footer = () => {
           <div className="flex flex-col gap-y-2">
             {CONTACT.map((contact) => (
               <a
-                
                 target="_blank"
                 href={contact.href}
                 key={contact.name}
-                className="flex items-center gap-x-3"
+                className="flex items-center gap-x-3 group w-fit"
               >
                 <contact.icon className="size-8 p-1 rounded-md bg-green-950 " />
-                 <span dir="ltr">{contact.value}</span>
+                <span dir="ltr" className="group-hover:text-yellow-500">
+                  {contact.value}
+                </span>
               </a>
             ))}
           </div>
@@ -25,15 +31,19 @@ const Footer = () => {
         <div className="flex flex-col gap-y-2 md:flex-1 ">
           <h1 className="text-2xl">تصنيفات</h1>
           <div className="flex flex-col gap-y-2">
-            {FIRST_NAVBAR.map((item, i) => (
-              <a
-                className="hover:underline hover:text-yellow-500"
-                key={i}
-                href={item.link}
-              >
-                {item.name}
-              </a>
-            ))}
+            {categoryLoading
+              ? [...Array(3)].map((_, index) => (
+                  <Skeleton h={"4"} w={"12"} key={index} />
+                ))
+              : categorys.map((category) => (
+                  <Link
+                    key={category._id}
+                    to={"/search/" + category._id}
+                    className="text-white hover:text-yellow-500"
+                  >
+                    {category.name}
+                  </Link>
+                ))}
           </div>
         </div>
         <div className="flex flex-col gap-y-2 md:flex-1 ">

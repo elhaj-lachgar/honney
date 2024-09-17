@@ -15,15 +15,15 @@ import { toastOption } from "../../lib";
 import { TAuthCredentials, resolver } from "../../validator/auth.validator";
 import axios from "axios";
 import { useForm } from "react-hook-form";
-// import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
-// import { app } from "../../../firebase";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
+import { useAddressContext } from "../../context/AddressContextProvider";
 function SignIn() {
   const [view, setView] = useState(true);
   const [loading, setLoading] = useState(false);
   const { setAuthUser } = useAuthContext();
   const toast = useToast();
+  const { setLoad, load } = useAddressContext();
   const {
     formState: { errors },
     register,
@@ -47,6 +47,7 @@ function SignIn() {
           "نجحت في تسجيل الدخول يا" + user.name
         );
         toast(option);
+        setLoad(!load);
         router("/");
       } else {
         const error_message = "خطأ في تسجيل الدخول";
@@ -77,6 +78,7 @@ function SignIn() {
           "نجحت في تسجيل الدخول يا" + user.name
         );
         toast(option);
+        setLoad(!load);
         router("/");
       } else {
         const error_message =
@@ -109,6 +111,7 @@ function SignIn() {
           </InputLeftElement>
           <Input
             type="email"
+            id="email"
             placeholder="أدخل بريد ..."
             {...register("email")}
           />
@@ -132,6 +135,7 @@ function SignIn() {
           </InputLeftElement>
           <Input
             type={!view ? "text" : "password"}
+            id="password"
             placeholder=" أدخل كلمة السر..."
             {...register("password")}
           />

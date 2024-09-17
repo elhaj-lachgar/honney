@@ -21,7 +21,7 @@ function ImageModule({ image }: { image: string[] }) {
       <img
         src={image[0]}
         alt="image of product"
-        className="w-full object-cover cursor-zoom-in  h-96"
+        className="w-full object-cover bg-center rounded  cursor-zoom-in  h-96"
         onClick={onOpen}
       />
       <Modal isOpen={isOpen} onClose={onClose} finalFocusRef={btnRef}>

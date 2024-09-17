@@ -12,47 +12,30 @@ import FilterCard from "../components/FilterCard";
 import { toastOption } from "../lib";
 import React, { Fragment, useEffect, useState } from "react";
 import Card from "../components/Card";
-import { BASE_URL, FIRST_NAVBAR } from "../constant";
-import { TCategory, TErrorService, TProductService } from "../constant/types";
-import { AlignLeft, X } from "lucide-react";
-import { useParams } from "react-router-dom";
-import axios from "axios";
+import { BASE_URL } from "../constant";
+import { TErrorService, TProductService } from "../constant/types";
+import { FilterIcon, X } from "lucide-react";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import Bar from "../components/Bar";
+import { useCategoryContext } from "../context/CategoryContextProvider";
+import { useNameProductContext } from "../context/ProductNameContext";
 
 function SearchPage() {
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState<TProductService[]>([]);
-  const [categoryLoading, setCategoryLoading] = useState(true);
   const [category_, setCategory] = useState<string[]>([]);
   const toast = useToast();
-  const [categorys, setCategorys] = useState<TCategory[]>([]);
+  const router = useNavigate();
   const [keyword, setKeyword] = useState("");
-  const [productsName, setProductsName] = useState<{ name: string }[]>([]);
+  const { productsName } = useNameProductContext();
   const [viewNames, setViewNames] = useState<{ name: string }[]>([]);
   const { onOpen, onClose, isOpen } = useDisclosure();
   const btnRef = React.useRef<null | HTMLInputElement>(null);
   const { searchId } = useParams();
-
-  const GetCategorys = () => {
-    const url = `${BASE_URL}/category`;
-    try {
-      fetch(url)
-        .then((response) => response.json())
-        .then((data) => {
-          if (data?.success) {
-            const { categorys } = data;
-            setCategorys(categorys);
-          } else {
-            const option = toastOption("error", "faild to fetch category");
-            toast(option);
-          }
-        })
-        .finally(() => setCategoryLoading(false));
-    } catch (error) {
-      const option = toastOption("error", "faild to fetch category");
-      toast(option);
-    }
-  };
+  const [s] = useSearchParams();
+  const searchValue = s.get("s");
+  const { categoryLoading, categorys } = useCategoryContext();
 
   const getProducts = (
     _category?: string[],
@@ -60,23 +43,24 @@ function SearchPage() {
     value?: boolean
   ) => {
     let url = `${BASE_URL}/product`;
-    const arr = ["beaty", "desc", "honney"];
     if (_category) {
       url = url + "?category=" + _category;
       if (value) {
         setCategory([]);
       }
-    } else if (searchId && arr.includes(searchId)) {
-      const element = FIRST_NAVBAR.find(
-        (item) => item.link.split("/")[2] == searchId
-      );
-      if (!element) return;
-      url = url + "?category=" + element?.categorys;
     } else if (searchId) {
       url = url + "?category=" + searchId;
     }
-    if (keyword && _category) url = url + "&keyword=" + keyword;
-    else if (keyword) url = url + "?keyword=" + keyword;
+    if (keyword && _category) {
+      url = url + "&keyword=" + keyword;
+      router("/search/" + searchId + "?s=" + keyword);
+    } else if (keyword) {
+      url = url + "?keyword=" + keyword;
+      router("/search/" + searchId + "?s=" + keyword);
+    }
+    if (!keyword) {
+      router("/search/" + searchId);
+    }
     try {
       setLoading(true);
       fetch(url)
@@ -91,63 +75,60 @@ function SearchPage() {
           }
         })
         .finally(() => setLoading(false));
-    } catch (error:any) {
+    } catch (error: any) {
       const err = error.response?.data as TErrorService;
       const option = toastOption("error", err.error || "خطأ أثناء العملية ");
       toast(option);
     }
   };
 
-  const getNames = async () => {
-    const url = BASE_URL + "/product/get-names";
-    try {
-      const res = await axios.get(url);
-      if (res.data?.success) {
-        setProductsName(res.data?.names);
-      }
-    } catch (error:any) {
-      const err = error.response?.data as TErrorService;
-      const option = toastOption("error", err.error || "خطأ أثناء العملية ");
-      toast(option);
-    }
-  };
   useEffect(() => {
     getProducts();
   }, [searchId]);
 
   useEffect(() => {
-    GetCategorys();
-    getNames();
+    if (searchValue) {
+      router("/search/" + searchId);
+    }
   }, []);
 
   const title = () => {
-    switch (searchId) {
-      case "honney":
-        return "العسل ومشتقاته";
-      case "desc":
-        return "وصفات";
-      case "beaty":
-        return "تداوي وتجميل";
-      default:
-        return "العسل ومشتقاته";
-    }
+    const target = categorys.find((c) => c._id == searchId);
+    if (target) return target.name;
+    return "منتجات";
   };
+
+  const location: { name: string; link: string }[] = [];
+
+  if (searchId) {
+    location.push({
+      link: "/search/" + searchId,
+      name: title(),
+    });
+  }
 
   return (
     <>
       <Helmet>
-        <title>{"search products"}</title>
+        <title>{"صفحة البحث"}</title>
         <meta
           name="description"
           content={`page of search in products of sage`}
         />
       </Helmet>
-      <main className="flex flex-col px-3 py-4 relative gap-y-4">
+      <main className="flex flex-col px-3 py-3  relative gap-y-4">
         <div className="flex flex-col gap-y-4 relative">
+          {searchId && location && !categoryLoading ? (
+            <Bar location={location} />
+          ) : (
+            <Skeleton h={"5"} w={"56"} />
+          )}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-x-2">
               <span className="h-3.5 w-[3.5px] bg-gray-500"></span>
-              <h1>{title()}</h1>
+              <h1>
+                {categoryLoading ? <Skeleton h={"4"} w={"12"} /> : title()}
+              </h1>
             </div>
             <div className="flex justify-end lg:hidden">
               <Button
@@ -156,7 +137,7 @@ function SearchPage() {
                   backgroundColor: "#F9C349",
                 }}
                 color={"white"}
-                leftIcon={<AlignLeft />}
+                rightIcon={<FilterIcon />}
                 onClick={onOpen}
               >
                 البحث
@@ -190,7 +171,8 @@ function SearchPage() {
                                 name.name.startsWith(e.target.value)
                               );
                               if (arr.length > 0) setViewNames(arr);
-                              else setViewNames([{ name: "no items found" }]);
+                              else
+                                setViewNames([{ name: "لا يوجد هذا العنصر" }]);
                             } else setViewNames([]);
                           }}
                         />
@@ -203,7 +185,7 @@ function SearchPage() {
                                   key={i}
                                   className="cursor-pointer text-gray-500 text-sm"
                                   onClick={() => {
-                                    if (name.name != "no items found") {
+                                    if (name.name != "لا يوجد هذا العنصر") {
                                       setKeyword(name.name);
                                       setViewNames([]);
                                     }
@@ -250,6 +232,7 @@ function SearchPage() {
                               <input
                                 type="checkbox"
                                 id={cat._id}
+                                name={cat._id}
                                 onChange={() => {
                                   const exist = category_.includes(cat._id);
                                   if (!exist) {
@@ -288,7 +271,7 @@ function SearchPage() {
                           name.name.startsWith(e.target.value)
                         );
                         if (arr.length > 0) setViewNames(arr);
-                        else setViewNames([{ name: "no items found" }]);
+                        else setViewNames([{ name: "لا يوجد هذا العنصر" }]);
                       } else setViewNames([]);
                     }}
                   />
@@ -301,7 +284,7 @@ function SearchPage() {
                             key={i}
                             className="cursor-pointer text-gray-500 text-sm"
                             onClick={() => {
-                              if (name.name != "no items found") {
+                              if (name.name != "لا يوجد هذا العنصر") {
                                 setKeyword(name.name);
                                 setViewNames([]);
                               }
@@ -344,6 +327,7 @@ function SearchPage() {
                         <input
                           type="checkbox"
                           id={cat._id}
+                          name={cat._id}
                           onChange={() => {
                             const exist = category_.includes(cat._id);
                             if (!exist) {
@@ -380,6 +364,11 @@ function SearchPage() {
                   </>
                 ) : (
                   <>
+                    {searchValue && (
+                      <h1 className="text-center w-full text-xl text-gray-500">
+                        {`نتيجة البحث عن "${searchValue}" هي (${products.length})`}
+                      </h1>
+                    )}
                     {products.map((product) => (
                       <Fragment key={product._id}>
                         <div className="hidden lg:block w-full">

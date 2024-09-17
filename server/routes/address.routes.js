@@ -1,7 +1,7 @@
 import { Router } from "express";
 import {
   CreateAddress,
-  DeleteAdress,
+  DeleteAddress,
   GetAddress,
   UpdateAddress,
   CreateAddressAuthUser,
@@ -44,7 +44,7 @@ router.post("/", CreateAddressValidator, CreateAddress);
 router
   .route("/:addressId")
   .put(UpdateAddressValidator, UpdateAddress)
-  .delete(DeleteAddressValidator, DeleteAdress)
+  .delete(DeleteAddressValidator, DeleteAddress)
   .get(GetAddressValidator, GetAddress);
 
 export default router;

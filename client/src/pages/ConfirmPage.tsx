@@ -1,4 +1,4 @@
-import { MoveLeft } from "lucide-react";
+import { Copy, CopyCheck, MoveLeft } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useCardContext } from "../context/CardContextProvider";
 import { useEffect, useState } from "react";
@@ -16,6 +16,20 @@ const ConfirmPage = () => {
   const toast = useToast();
   const [order, setOrder] = useState<TOrder | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isCopyed, setIsCopyed] = useState(false);
+
+  const copy = async (value: string) => {
+    try {
+      await window.navigator.clipboard.writeText(value);
+      const option = toastOption("success", "text copy successfully");
+      toast(option);
+      setIsCopyed(true);
+    } catch (error) {
+      const option = toastOption("error", "text copy failed");
+      toast(option);
+      setIsCopyed(false);
+    }
+  };
 
   const getOrder = async () => {
     if (!orderId) return;
@@ -30,7 +44,7 @@ const ConfirmPage = () => {
         toast(option);
         router(-1);
       }
-    } catch (error:any) {
+    } catch (error: any) {
       const err = error.response?.data as TErrorService;
       const option = toastOption("error", err.error || "خطأ أثناء العملية ");
       toast(option);
@@ -43,14 +57,17 @@ const ConfirmPage = () => {
     clearCard();
   }, []);
 
+
+
+
   return (
     <>
       <Helmet>
         <title>{"confirm"}</title>
         <meta name="description" content={`confirmation page`} />
       </Helmet>{" "}
-      <div className="flex flex-col gap-y-6 pb-20 ">
-        <div className="flex flex-col items-center gap-y-3 justify-center h-[300px] bg-yellow-500">
+      <div className="flex flex-col gap-y-6  ">
+        <div className="flex flex-col items-center gap-y-3 w-full justify-center h-[300px] bg-yellow-500">
           <h1 className="text-white text-2xl">تم تأكيد الطلبية</h1>
           <p> سيتم تواصل معكم عما قريب</p>
           <Link
@@ -67,7 +84,7 @@ const ConfirmPage = () => {
         ) : (
           <>
             <h1 className="text-center text-xl w-11/12 mx-auto md:text-4xl text-yellow-500">
-            لقد تم التوصل بطلبيتك. شكرا لطلبك من ساجا
+              لقد تم التوصل بطلبيتك. شكرا لطلبك من ساجا
             </h1>
             <div className="flex flex-col gap-y-4 p-3 md:p-5 border w-11/12 md:w-10/12 md:3/4 mx-auto bg-yellow-50 rounded-md shadow-lg">
               <h1 className="text-2xl">تفاصيل الطلبية</h1>
@@ -80,14 +97,17 @@ const ConfirmPage = () => {
                 </div>
                 <hr />
               </div>
-              {order?.products.map((product) => (
-                <div className="flex w-full px-3" key={product.product._id}>
-                  <p  className="flex-[2] md:flex-[5]  overflow-x-auto">
-                    {product.product.name + product.productQuantity.quantity + "ml"}
+              {order?.products.map((product , index) => (
+                <div className="flex w-full px-3" key={product.product._id.concat(index.toString())}>
+                  <p className="flex-[2] md:flex-[5]  overflow-x-auto">
+                    {product.product.name +
+                      product.productQuantity.quantity +
+                      "g"}
                   </p>
                   <p className="flex-[2] font-medium">X {product.quantity}</p>
                   <p className="flex-[2] lg:flex-[3] font-medium ">
-                    {product.product.price  * product.productQuantity.number} {product.product.currency}
+                    {product.product.price * product.productQuantity.number}{" "}
+                    {product.product.currency}
                   </p>
                 </div>
               ))}
@@ -97,7 +117,20 @@ const ConfirmPage = () => {
                 <h1 className="text-2xl">معلومات الطلبية</h1>
                 <div className="flex items-center">
                   <p className="w-[100px] font-medium">رقم الطلبية</p>
-                  <p>:{order?._id}</p>
+                  <div className="flex items-center gap-x-2">
+                    <p>:{order?._id.substring(0,10) +'...'}</p>
+                    {isCopyed ? (
+                      <CopyCheck />
+                    ) : (
+                      <Copy
+                        className="cursor-pointer"
+                        onClick={() => {
+                          if (!order?._id) return;
+                          copy(order?._id);
+                        }}
+                      />
+                    )}
+                  </div>
                 </div>
                 <div className="flex items-center">
                   <p className="w-[100px] font-medium">التاريخ</p>

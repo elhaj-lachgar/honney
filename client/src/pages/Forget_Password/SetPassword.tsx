@@ -76,7 +76,7 @@ function SetPassword() {
     >
       <h1 className="text-2xl font-serif">إرسال كلمة السر</h1>
       <div className="flex-col flex gap-y-1">
-        <label htmlFor="">كلمة سر الجديدة</label>
+        <label htmlFor="new_password">كلمة سر الجديدة</label>
         <InputGroup>
           <InputLeftElement>
             {passwordView ? (
@@ -94,6 +94,7 @@ function SetPassword() {
           <Input
             type={!passwordView ? "text" : "password"}
             placeholder="أدخل كلمة سر الجديدة..."
+            id="new_password"
             {...register("new_password")}
           />
         </InputGroup>
@@ -104,7 +105,7 @@ function SetPassword() {
         )}
       </div>
       <div className="flex-col flex gap-y-1">
-        <label htmlFor="">تأكيد كلمة السر</label>
+        <label htmlFor="confirm-password">تأكيد كلمة السر</label>
         <InputGroup>
           <InputLeftElement>
             {confirmPasswordView ? (
@@ -121,6 +122,8 @@ function SetPassword() {
           </InputLeftElement>
           <Input
             type={!confirmPasswordView ? "text" : "password"}
+            id="confirm-password"
+            name="confirm-password"
             placeholder="أدخل تأكيد كلمة السر..."
             onChange={(e) => setConfirmPassword(e.currentTarget.value)}
           />

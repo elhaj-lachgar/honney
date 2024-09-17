@@ -1,17 +1,20 @@
-import { useState } from "react";
+import { useEffect, useRef } from "react";
 import { CONTACT, QUESTIONS } from "../constant";
-import { ChevronLeft, ChevronDown } from "lucide-react";
-// import { motion } from "framer-motion";
 import { Helmet } from "react-helmet";
 function ContactUs() {
-  const [view, setView] = useState<string[]>([]);
+  const ref = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (ref) {
+      ref.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, []);
   return (
     <>
       <Helmet>
         <title>{"تواصل معنا"}</title>
         <meta name="description" content=" page of contact saja" />
       </Helmet>
-      <main className="flex flex-col gap-y-5  w-full pb-48 ">
+      <main ref={ref} className="flex flex-col gap-y-5  w-full pb-5">
         <div className="h-[175px]  relative  bg-gray-50 md:h-[300px]  w-full flex items-center justify-center">
           <h1 className="font-bold text-2xl ">تواصل معنا</h1>
           <img
@@ -56,38 +59,12 @@ function ContactUs() {
           </h1>
           <div className="flex-col flex gap-y-5 ">
             {QUESTIONS.map((question) => (
-              <div key={question.id} className="flex flex-col gap-y-3">
-                <div className="flex items-center gap-x-">
-                  {!view.includes(question.id) ? (
-                    <>
-                      <ChevronLeft
-                        className="cursor-pointer "
-                        onClick={() => setView([...view, question.id])}
-                      />
-                    </>
-                  ) : (
-                    <>
-                      <ChevronDown
-                        className="cursor-pointer "
-                        onClick={() =>
-                          setView(view.filter((id) => id !== question.id))
-                        }
-                      />
-                    </>
-                  )}
-                  {question.name}
-                </div>
-                {question.value.map((value, i) => (
-                  <p
-                    key={i}
-                    className={`${
-                      view.includes(question.id) ? "block" : "hidden"
-                    }`}
-                  >
-                    {value}
-                  </p>
+              <details key={question.id}>
+                <summary> {question.name}</summary>
+                {question.value.map((vl, index) => (
+                  <p key={question.id.concat(index.toString())}>{vl}</p>
                 ))}
-              </div>
+              </details>
             ))}
           </div>
         </div>

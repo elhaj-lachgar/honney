@@ -5,21 +5,23 @@ import { useCardContext } from "../context/CardContextProvider";
 import { useNavigate } from "react-router-dom";
 import { toastOption } from "../lib";
 import { Helmet } from "react-helmet";
+import { useEffect, useRef } from "react";
 
 function ShoppingCart() {
   const { card } = useCardContext();
   const toast = useToast();
   const router = useNavigate();
+  const ref = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    ref?.current?.scrollIntoView({ block: "end", behavior: "smooth" });
+  }, [ref]);
   return (
     <>
       <Helmet>
         <title>{"cart"}</title>
-        <meta
-          name="description"
-          content={`shopping cart page`}
-        />
+        <meta name="description" content={`shopping cart page`} />
       </Helmet>
-      <main className="flex flex-col  items-center my-10 ">
+      <main ref={ref} className="flex flex-col  items-center my-10 ">
         <div className="flex lg:hidden flex-col gap-y-5">
           {card.products.map((product) => (
             <MobileCartItem

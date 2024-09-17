@@ -5,6 +5,7 @@ import axios from "axios";
 import { toastOption } from "../../lib";
 import { Spinner, useToast } from "@chakra-ui/react";
 import OrderProfileItem from "../../components/profile/OrderProfileItem";
+import {  PackageXIcon } from "lucide-react";
 
 function OrderProfilePage() {
   const [orders, setOrders] = useState<TOrder[]>([]);
@@ -23,14 +24,13 @@ function OrderProfilePage() {
         const option = toastOption("error", "خطاء في عملية");
         toast(option);
       }
-    } catch (error:any) {
+    } catch (error: any) {
       const err = error.response?.data as TErrorService;
       const option = toastOption("error", err.error || "خطأ أثناء العملية ");
       toast(option);
     }
     setLoading(false);
   };
-
 
   useEffect(() => {
     getUser();
@@ -42,11 +42,18 @@ function OrderProfilePage() {
         <div className=" flex items-center justify-center h-screen">
           <Spinner size={"xl"} />
         </div>
-      ) : (
+      ) : orders.length > 0 ? (
         <div className="flex flex-col gap-y-5  justify-center items-center  mt-20">
           {orders.map((order) => (
             <OrderProfileItem order={order} key={order._id} />
           ))}
+        </div>
+      ) : (
+        <div className="flex items-center h-screen justify-center">
+          <div className="flex items-center flex-col gap-y-2 ">
+            <PackageXIcon className="size-40 text-yellow-500" />
+            <p className="text-gray-600 text-xl">لا يوجد طلبات بعد</p>
+          </div>
         </div>
       )}
     </div>

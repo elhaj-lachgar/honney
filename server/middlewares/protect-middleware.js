@@ -16,7 +16,7 @@ const ProtectMiddleware = asynchandler(async (req, res, next) => {
   if (user.changePassword_At) {
     const dure = Math.floor(user.changePassword_At / 1000);
     if (dure > valid.iat)
-      return next(new ErrorHandler("please login again", 400));
+      return next(new ErrorHandler("الرجاء ،إعادة التسجيل", 400));
   }
   req.user = user;
   return next();

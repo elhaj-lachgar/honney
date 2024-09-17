@@ -22,6 +22,8 @@ function setEmail() {
   const router = useNavigate();
   const [loading, setLoading] = useState(false);
   const toast = useToast();
+
+  
   const setEmail = async (params: TSetEmailCredentials) => {
     const url = BASE_URL + "/auth/set-email";
     const data = JSON.stringify({ email: params.email });
@@ -70,6 +72,7 @@ function setEmail() {
           </InputLeftElement>
           <Input
             type="email"
+            id="email"
             placeholder="أدخل بريد ..."
             {...register("email")}
           />
@@ -80,7 +83,7 @@ function setEmail() {
       </div>
 
       <p className="text-gray-400 text-sm px-3">
-       الرجاء تفقد بريدك الإلكتروني
+       الرجاء إدخال بريدك الإلكتروني
       </p>
       <Button
         bg={"#dcb140"}

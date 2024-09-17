@@ -6,7 +6,6 @@ import {
   Modal,
   ModalContent,
   ModalOverlay,
-  Select,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -97,7 +96,7 @@ function AdressModule({ load, setLoad }: TProps) {
             className="flex flex-col gap-y-4 p-3"
           >
             <div className="flex flex-col gap-y-0.5 ">
-              <label className="text-xl flex items-center">
+              <label htmlFor="phone" className="text-xl flex items-center">
                 {" "}
                 هاتف <span className="text-red-500">*</span>
               </label>
@@ -105,6 +104,7 @@ function AdressModule({ load, setLoad }: TProps) {
                 <InputLeftAddon>+212</InputLeftAddon>
                 <Input
                   type="number"
+                  id="phone"
                   placeholder="ex.600000000"
                   {...register("phone")}
                 />
@@ -116,28 +116,41 @@ function AdressModule({ load, setLoad }: TProps) {
               )}
             </div>
             <div className="flex flex-col gap-y-0.5">
-              <label className="flex items-center">
+              <label htmlFor="city" className="flex items-center">
                 المدينة<span className="text-red-500">*</span>
               </label>
-              <Select dir="ltr" {...register("city")}>
+              <Input type="text" id="city" list="citys" {...register('city')}/>
+              <datalist id="citys">
                 {Citys.map((city) => (
-                  <option value={city.ville}>{city.ville}</option>
+                  <option key={city.id} value={city.ville} />
                 ))}
-              </Select>
-              {errors.city && (
+              </datalist>
+              {errors.city && <p className="text-red-500 italic text-sm">{errors.city.message}</p>}
+            </div>
+            <div className="flex flex-col gap-y-0.5">
+              <label htmlFor="streat" className="flex items-center">
+                الموقع<span className="text-red-500">*</span>
+              </label>
+              <Input type="text" id="streat" {...register("streat")} />
+              {errors.streat && (
                 <p className="text-red-500 italic text-sm">
-                  {errors.city.message}
+                  {errors.streat.message}
                 </p>
               )}
             </div>
-
             <div className="flex flex-col gap-y-0.5">
-              <label>رقم</label>
+              <label htmlFor="codePostal">رقم</label>
               <Input
+                id="codePostal"
                 type="number"
                 placeholder="13100"
                 {...register("codePostal")}
               />
+              {errors.codePostal && (
+                <p className="text-red-500 text-sm italic">
+                  {errors.codePostal.message}
+                </p>
+              )}
             </div>
             <Button
               type="submit"

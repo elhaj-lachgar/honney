@@ -19,8 +19,8 @@ function OrderProfileItem({ order }: { order: TOrder }) {
          رقم الطلبة :<p className="text-red-500">{order._id}</p>
         </p>
         <div className=" flex flex-wrap gap-2.5">
-          {order.products.map((product) => (
-            <div className="flex flex-col items-center">
+          {order.products.map((product , index) => (
+            <div key={product.product._id.concat(`${index}`)} className="flex flex-col items-center">
               <img
                 alt="image of product"
                 className="w-28 rounded-md"

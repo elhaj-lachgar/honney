@@ -8,7 +8,9 @@ import { ChakraProvider } from "@chakra-ui/react";
 import WishListContextProvider from "./context/WishListContextProvider.tsx";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import AuthContextProvider from "./context/AuthContextProvider.tsx";
-
+import CategoryContextProvider from "./context/CategoryContextProvider.tsx";
+import ProductNameContext from "./context/ProductNameContext.tsx";
+import AddressContextProvider from "./context/AddressContextProvider.tsx";
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <BrowserRouter>
@@ -17,7 +19,13 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <CardContextProvider>
             <WishListContextProvider>
               <ChakraProvider>
-                <App />
+                <CategoryContextProvider>
+                  <ProductNameContext>
+                    <AddressContextProvider>
+                      <App />
+                    </AddressContextProvider>
+                  </ProductNameContext>
+                </CategoryContextProvider>
               </ChakraProvider>
             </WishListContextProvider>
           </CardContextProvider>

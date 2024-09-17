@@ -5,7 +5,7 @@ import StarRating from "react-star-ratings";
 import Card from "../components/Card";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { TErrorService, TProductService } from "../constant/types";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useWishListContext } from "../context/WishListContextProvider";
 import { useCardContext } from "../context/CardContextProvider";
 import ImageModule from "../components/_modules/ImageModule";
@@ -27,6 +27,7 @@ function HomeDetails() {
   const [loading, setLoading] = useState(true);
   const { products, addProduct, deleteProduct } = useWishListContext();
   const [related, setRelated] = useState<TProductService[]>([]);
+  const ref = useRef<HTMLDivElement | null>(null);
   const { addToCard } = useCardContext();
   const toast = useToast();
 
@@ -43,7 +44,7 @@ function HomeDetails() {
         setRelated(Object_data.related);
         setReviewValue(Object_data.value);
       }
-    } catch (error:any) {
+    } catch (error: any) {
       const err = error.response?.data as TErrorService;
       const option = toastOption("error", err.error || "خطأ أثناء العملية ");
       toast(option);
@@ -52,7 +53,11 @@ function HomeDetails() {
 
   useEffect(() => {
     getProduct().finally(() => setLoading(false));
-  }, [load]);
+  }, [load, id]);
+
+  useEffect(() => {
+    ref?.current?.scrollIntoView({ behavior: "smooth" });
+  }, [id, ref]);
 
   const isLiked = products.findIndex((product) => product._id == id) > -1;
 
@@ -89,7 +94,10 @@ function HomeDetails() {
 
       <div className="flex flex-col p-3 gap-y-7 ">
         {loading ? (
-          <div className="flex flex-col ">
+          <div className="flex flex-col gap-y-5 ">
+            <div className="w-full">
+              <Skeleton w={"56"} h={"5"} />
+            </div>
             <div className="flex flex-col lg:flex-row  lg:items-center gap-x-7  ">
               <div className=" w-full lg:flex-1 ">
                 <Skeleton h={"96"} w={"full"} />
@@ -133,7 +141,7 @@ function HomeDetails() {
             </div>
           </div>
         ) : product ? (
-          <div className="flex flex-col">
+          <div className="flex flex-col" ref={ref}>
             <div className="py-2.5">
               {location && <Bar location={location} />}
             </div>
@@ -175,10 +183,6 @@ function HomeDetails() {
                   <span>التصنيف: </span>
                   {product.category.name}
                 </h2>
-                <h2 className="flex items-center gap-x-5">
-                  مستودع :
-                  <span className="text-green-500">{product.stock}</span>
-                </h2>
 
                 <h2 className="flex items-center gap-x-5">
                   كمية:
@@ -192,7 +196,7 @@ function HomeDetails() {
                         }`}
                         onClick={() => setSelectedQuantity(pr._id)}
                       >
-                        {pr.quantity + " ml"}
+                        {pr.quantity + " g"}
                       </div>
                     ))}
                   </div>
@@ -208,7 +212,6 @@ function HomeDetails() {
                     color={"white"}
                     leftIcon={<ShoppingBasket />}
                     onClick={() => {
-                      console.log(finalPrice);
                       if (!finalPrice) {
                         const option = toastOption(
                           "error",
@@ -283,7 +286,7 @@ function HomeDetails() {
                         <div className="flex-1 flex-col flex gap-y-1">
                           <div className="flex flex-col">
                             <div className="flex items-center gap-x-1">
-                              {product.rating_info?.five_star} نجمة{" "}
+                              ({product.rating_info?.five_star}){" "}
                               <StarRating
                                 starDimension="20px"
                                 starSpacing="1px"
@@ -293,7 +296,7 @@ function HomeDetails() {
                               />
                             </div>
                             <div className="flex items-center gap-x-1">
-                              {product.rating_info?.four_star} نجمة{" "}
+                              ({product.rating_info?.four_star}){" "}
                               <StarRating
                                 starDimension="20px"
                                 starSpacing="1px"
@@ -303,7 +306,7 @@ function HomeDetails() {
                               />
                             </div>
                             <div className="flex items-center gap-x-1">
-                              {product.rating_info?.three_star} نجمة{" "}
+                              ({product.rating_info?.three_star}){" "}
                               <StarRating
                                 starDimension="20px"
                                 starSpacing="1px"
@@ -313,7 +316,7 @@ function HomeDetails() {
                               />
                             </div>
                             <div className="flex items-center gap-x-1">
-                              {product.rating_info?.two_star} نجمة{" "}
+                              ({product.rating_info?.two_star}){" "}
                               <StarRating
                                 starDimension="20px"
                                 starSpacing="1px"
@@ -323,7 +326,7 @@ function HomeDetails() {
                               />
                             </div>
                             <div className="flex items-center gap-x-1">
-                              {product.rating_info?.one_star} نجمة{" "}
+                              ({product.rating_info?.one_star}){" "}
                               <StarRating
                                 starDimension="20px"
                                 starSpacing="1px"

@@ -1,6 +1,7 @@
 import { Minus, Plus, X } from "lucide-react";
 import { Input } from "@chakra-ui/react";
 import { useCardContext } from "../context/CardContextProvider";
+import { Link } from "react-router-dom";
 
 function LargeCartItem() {
   const { card, decrementCard, deleteFromCard, incrementCard } =
@@ -20,22 +21,22 @@ function LargeCartItem() {
             className="flex items-center text-gray-600  px-2 "
             key={product.product._id}
           >
-            <div className="flex-[3] py-2  flex items-center gap-x-5">
+            <div className="flex-[3] py-2  flex items-center gap-x-2">
               <X
                 className="size-8 bg-gray-100 p-1 rounded-full cursor-pointer"
                 onClick={() =>
                   deleteFromCard(product.product, product.productQuantity)
                 }
               />
-              <a id="links" href={"/" + product.product._id}>
+              <Link id="links" to={"/" + product.product._id}>
                 <img
                   src={product.product.imageUrls[0]}
                   alt=""
                   className="w-24 h-24 "
                 />
-              </a>
-              {product.product.name + "  "}
-              <span dir="ltr">{product.productQuantity.quantity + " ml"}</span>
+              </Link>
+              {product.product.name.substring(0,10)+"..." + " "}
+              <span dir="ltr">{product.productQuantity.quantity + " g"}</span>
             </div>
             <div className="flex-1">
               {product.product.price * product.productQuantity.number +

@@ -1,13 +1,25 @@
-import { Button } from "@chakra-ui/react";
-import {  ShoppingBasketIcon } from "lucide-react";
+import { Button, Skeleton } from "@chakra-ui/react";
+import { ShoppingBasketIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
-function Banner() {
+import { Suspense } from "react";
+function Banner({
+  productId,
+  loading,
+}: {
+  productId?: string;
+  loading: boolean;
+}) {
   const router = useNavigate();
   return (
     <div className="flex flex-col-reverse gap-4 justify-center items-center md:flex-row p-5 bg-yellow-100">
       <div className="lg:flex-1 flex justify-center">
-        <img src="/section/main_6.png" alt="image " className="w-[300px]" />
+        <Suspense
+          fallback={
+            <Skeleton width={"300px"} height={"300px"} colorScheme="yellow" />
+          }
+        >
+          <img src="/section/main_6.png" alt="image " className="w-[300px]" />
+        </Suspense>
       </div>
       <div className="flex lg:flex-1    ">
         <div className=" gap-y-8 text-center md:text-start text-gray-500 flex flex-col justify-center  ">
@@ -20,18 +32,21 @@ function Banner() {
             لتجديد البشرة، وصابونًا بلديًا طبيعيًا لتنظيف وترطيب البشرة{" "}
           </p>
           <div className="">
-            <Button
-              bg={"#dcb140"}
-              _hover={{
-                backgroundColor: "#F9C349",
-              }}
-              color={"white"}
-              size={"lg"}
-              onClick={() => router("/668829b2c21586cc369e63b1")}
-              leftIcon={<ShoppingBasketIcon />}
-            >
-              اطلبها الآن
-            </Button>
+            {productId && (
+              <Button
+                bg={"#dcb140"}
+                _hover={{
+                  backgroundColor: "#F9C349",
+                }}
+                color={"white"}
+                size={"lg"}
+                onClick={() => router("/" + productId)}
+                leftIcon={<ShoppingBasketIcon />}
+                isLoading={loading}
+              >
+                اطلبها الآن
+              </Button>
+            )}
           </div>
         </div>
       </div>

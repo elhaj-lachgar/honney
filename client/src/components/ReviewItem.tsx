@@ -6,10 +6,9 @@ import {
   Menu,
   useToast,
 } from "@chakra-ui/react";
-import { TErrorService, TReview, TUser } from "../constant/types";
+import { TErrorService, TReview} from "../constant/types";
 import { EllipsisVertical } from "lucide-react";
 import StarRating from "react-star-ratings";
-import { useEffect, useState } from "react";
 import { BASE_URL, DEFAULT_HEADER } from "../constant";
 import { useAuthContext } from "../context/AuthContextProvider";
 import axios from "axios";
@@ -27,26 +26,12 @@ function ReviewItem({
   review: TReview;
   productId: string;
 }) {
-  const [user, setUser] = useState<TUser | null>(null);
   const toast = useToast();
   const { authUser } = useAuthContext();
-  const getUser = async () => {
-    const url = BASE_URL + "/user/review-user/" + review.user;
-    try {
-      const res = await axios.get(url);
-      if (res.data?.success) {
-        setUser(res.data?.user);
-      } else {
-        console.log("error fetching user");
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   const DeleteReview = async () => {
     if (!productId) return;
-    if (authUser?._id != user?._id) return;
+    if (authUser?._id != review.user._id) return;
     const url = BASE_URL + "/review/delete-review/" + review._id;
     const data = JSON.stringify({ productId });
     try {
@@ -67,9 +52,8 @@ function ReviewItem({
     }
   };
 
-  useEffect(() => {
-    getUser();
-  }, []);
+  const { user } = review;
+
   return (
     <div className="flex flex-col gap-y-1  border rounded-md p-1 ">
       <div className="flex justify-between gap-x-2 items-center  ">
@@ -93,7 +77,12 @@ function ReviewItem({
                 <EllipsisVertical />
               </MenuButton>
               <MenuList>
-                <UpdateReview review={review} load={load} setLoad={setLoad} productId={productId}/>
+                <UpdateReview
+                  review={review}
+                  load={load}
+                  setLoad={setLoad}
+                  productId={productId}
+                />
                 <MenuItem color={"red"} onClick={DeleteReview}>
                   حذف
                 </MenuItem>

@@ -13,6 +13,7 @@ import path from "path";
 import OrderRoute from "./routes/order.routes.js";
 import BannerRoute from "./routes/banner.routes.js";
 import ReviewRoute from "./routes/review.routes.js";
+import CouponRoute from "./routes/coupon.routes.js";
 import morgan from "morgan";
 const app = express();
 dotenv.config();
@@ -26,7 +27,7 @@ app.use(express.json({ limit: "2kb" }));
 app.use(CookieParser());
 app.use(express.static(path.join(import.meta.dirname, "./upload")));
 
-
+app.use("/api/v1/coupon" , CouponRoute)
 app.use("/api/v1/banner", BannerRoute);
 app.use("/api/v1/user", UserRoute);
 app.use("/api/v1/auth", AuthRoute);

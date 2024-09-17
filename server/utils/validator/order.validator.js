@@ -50,3 +50,20 @@ export const getOrderValidator = [
   .withMessage('orderId not Valid'),
   ValidatorMiddleware
 ]
+
+
+export const getOrderNotAuthValidator = [
+  check('orderId')
+  .notEmpty()
+  .withMessage('orderId is required')
+  .isMongoId()
+  .withMessage('orderId not Valid'),
+
+  check('email')
+  .notEmpty()
+  .withMessage('email is required')
+  .isEmail()
+  .withMessage('email is not valid'),
+
+  ValidatorMiddleware,
+]

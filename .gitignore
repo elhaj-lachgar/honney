@@ -5,3 +5,7 @@ email
 
 
 .env
+
+.vscode
+
+test

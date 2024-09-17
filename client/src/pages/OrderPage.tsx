@@ -1,65 +1,32 @@
 import { Verified } from "lucide-react";
 import AdressModule from "../components/profile/AdressModule";
 import { toastOption } from "../lib/index";
-import { Button, useToast } from "@chakra-ui/react";
+import { Button, Skeleton, useToast } from "@chakra-ui/react";
 import { useCardContext } from "../context/CardContextProvider";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContextProvider";
 import { BASE_URL, DEFAULT_HEADER } from "../constant";
 import axios from "axios";
-import { TAddress, TErrorService, TOrder } from "../constant/types";
+import { TErrorService, TOrder } from "../constant/types";
 import { Helmet } from "react-helmet";
 import NotAuthAddressModule from "../components/NotAuthAddressModule";
+import AddressItem from "../components/AddressItem";
+import { useAddressContext } from "../context/AddressContextProvider";
 
 function OrderPage() {
   const { card } = useCardContext();
-  const [addresses, setAdresses] = useState<TAddress[]>([]);
-  const [load, setLoad] = useState(false);
+  const {
+    addresses,
+    load,
+    setLoad,
+    loading: addressLoading,
+  } = useAddressContext();
   const [selectedAddress, setSelectedAddress] = useState("");
   const [loading, setLoading] = useState(false);
   const toast = useToast();
   const router = useNavigate();
   const { authUser } = useAuthContext();
-
-  const getAddresses = async () => {
-    const url = `${BASE_URL}/address/get-address-auth`;
-    try {
-      const res = await axios.get(url);
-      const Object_data = res.data;
-      if (Object_data?.success) {
-        setAdresses(Object_data.addresses);
-      } else {
-        const option = toastOption("error", "خطّأ في عملية");
-        toast(option);
-      }
-    } catch (error) {
-      const option = toastOption("error", "خطّأ في عملية");
-      toast(option);
-    }
-  };
-
-  const getAddressNotAuth = async () => {
-    const url = `${BASE_URL}/address/get-address-not-auth`;
-    const addresses = JSON.parse(
-      window.localStorage.getItem("addresses") as string
-    ) as string[];
-    if (!addresses || addresses.length == 0) return;
-    const data = JSON.stringify({ addresses });
-    try {
-      const res = await axios.post(url, data, { headers: DEFAULT_HEADER });
-      const Object_data = res.data;
-      if (Object_data?.success) {
-        setAdresses(Object_data.addresses);
-      } else {
-        const option = toastOption("error", "خطّأ في عملية");
-        toast(option);
-      }
-    } catch (error) {
-      const option = toastOption("error", "خطّأ في عملية");
-      toast(option);
-    }
-  };
 
   const CreateOrderHandler = async () => {
     if (!selectedAddress) return;
@@ -93,14 +60,6 @@ function OrderPage() {
     setLoading(false);
   };
 
-  useEffect(() => {
-    if (authUser) {
-      getAddresses();
-      return;
-    }
-    getAddressNotAuth();
-  }, [load]);
-
   return (
     <>
       <Helmet>
@@ -115,27 +74,21 @@ function OrderPage() {
           </div>
           <hr />
           <div className=" w-full h-full flex flex-col overflow-auto px-3 py-2 gap-y-2 ">
-            {addresses.map((adress) => (
-              <div
-                key={adress._id}
-                className="flex border  items-center  gap-x-5 px-2 py-1 rounded-md cursor-pointer"
-              >
-                <input
-                  id="address"
-                  type="checkbox"
-                  className="w-4 h-4"
-                  value={adress._id}
-                  onChange={(e) => {
-                    setSelectedAddress(e.currentTarget.value);
-                  }}
-                  checked={selectedAddress == adress._id}
+            {addressLoading ? (
+              <Skeleton w={"full"} h={"12"} borderRadius={"10px"} />
+            ) : (
+              addresses.map((address) => (
+                <AddressItem
+                  address={address}
+                  key={address._id}
+                  load={load}
+                  setLoad={setLoad}
+                  selectedAddress={selectedAddress}
+                  setSelectedAddress={setSelectedAddress}
+                  isProfile={true}
                 />
-                <label htmlFor="address" className="flex flex-col ">
-                  <h1>{adress.city}</h1>
-                  <p>{adress.codePostal} </p>
-                </label>
-              </div>
-            ))}
+              ))
+            )}
           </div>
           <hr />
           <div className="w-full  p-2">
@@ -171,8 +124,8 @@ function OrderPage() {
                   <h1>{product.product.name}</h1>
                   <p
                     dir="ltr"
-                    className="text-end"
-                  >{`${product.productQuantity.quantity} ml`}</p>
+                    className="text-end border rounded w-fit p-0.5 bg-gray-50"
+                  >{`${product.productQuantity.quantity} g`}</p>
                   <p>
                     {product.quantity} *{" "}
                     {product.product.price * product.productQuantity.number +

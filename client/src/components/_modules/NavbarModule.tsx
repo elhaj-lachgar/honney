@@ -1,5 +1,5 @@
 import { AlignLeftIcon, X } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import {useNavigate } from "react-router-dom";
 import {
   Drawer,
   DrawerOverlay,
@@ -7,18 +7,49 @@ import {
   useDisclosure,
   Button,
   Avatar,
+  useToast,
+  Skeleton,
 } from "@chakra-ui/react";
-import { useId, useRef } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import Logo from "../Logo";
-import { FIRST_NAVBAR, SECOND_NAVBAR } from "../../constant";
+import { BASE_URL, SECOND_NAVBAR } from "../../constant";
 import { motion } from "framer-motion";
 import { useAuthContext } from "../../context/AuthContextProvider";
+import { TCategory } from "../../constant/types";
+import { toastOption } from "../../lib";
 
 function NavbarModule() {
   const { onOpen, onClose, isOpen } = useDisclosure();
   const btnRef = useRef<null | HTMLInputElement>(null);
   const router = useNavigate();
   const { authUser } = useAuthContext();
+  const toast = useToast();
+  const [categorys, setCategorys] = useState<TCategory[]>([]);
+  const [loading, setLoading] = useState(true);
+  const GetCategorys = () => {
+    const url = `${BASE_URL}/category`;
+    try {
+      fetch(url)
+        .then((response) => response.json())
+        .then((data) => {
+          if (data?.success) {
+            const { categorys } = data;
+            setCategorys(categorys);
+          } else {
+            const option = toastOption("error", "faild to fetch category");
+            toast(option);
+          }
+        })
+        .finally(() => setLoading(false));
+    } catch (error) {
+      const option = toastOption("error", "faild to fetch category");
+      toast(option);
+    }
+  };
+
+  useEffect(() => {
+    GetCategorys();
+  }, []);
   return (
     <>
       <AlignLeftIcon
@@ -70,54 +101,59 @@ function NavbarModule() {
           </div>
           <hr />
           <div className="flex flex-col gap-y-3 relative  w-full  pt-4 ">
-            {FIRST_NAVBAR.map((item, i) => (
-              <motion.span
-                initial={{
-                  opacity: 0,
-                  y: 50,
-                }}
-                transition={{
-                  duration: 0.3,
-                  delay: 0.2 * i,
-                }}
-                whileInView={{
-                  opacity: 1,
-                  y: 0,
-                }}
-                onClick={() => {
-                  onClose();
-                  router(item.link);
-                }}
-                key={i.toString().concat(useId())}
-                className=" mx-3 p-2 rounded   hover:text-white hover:bg-yellow-500"
-              >
-                <Link to={"/"}>{item.name}</Link>
-              </motion.span>
-            ))}
-            {SECOND_NAVBAR.map((item, i) => (
-              <motion.span
-                initial={{
-                  opacity: 0,
-                  y: 50,
-                }}
-                transition={{
-                  duration: 0.3,
-                  delay: 0.2 * (i + 3),
-                }}
-                whileInView={{
-                  opacity: 1,
-                  y: 0,
-                }}
-                onClick={() => {
-                  onClose();
-                  router(item.link);
-                }}
-                key={i.toString().concat(useId())}
-                className=" mx-3 p-2 rounded   hover:text-white hover:bg-yellow-500 "
-              >
-                {item.name}
-              </motion.span>
-            ))}
+            {loading
+              ? [...Array(3)].map((_, i) => <Skeleton key={i} m={'2'} mx={'3'} w="14" h="4" />)
+              : categorys.map((item, i) => (
+                  <motion.span
+                    initial={{
+                      opacity: 0,
+                      y: 50,
+                    }}
+                    transition={{
+                      duration: 0.3,
+                      delay: 0.2 * i,
+                    }}
+                    whileInView={{
+                      opacity: 1,
+                      y: 0,
+                    }}
+                    onClick={() => {
+                      onClose();
+                      router(`/search/${item._id}`);
+                    }}
+                    key={item._id}
+                    className=" mx-3 p-2 rounded cursor-pointer   hover:text-white hover:bg-yellow-500"
+                  >
+                    {item.name}
+                  </motion.span>
+                ))}
+            {SECOND_NAVBAR.map((item, i) => {
+              if (authUser && i == 2) return null;
+              return (
+                <motion.span
+                  initial={{
+                    opacity: 0,
+                    y: 50,
+                  }}
+                  transition={{
+                    duration: 0.3,
+                    delay: 0.2 * (i + 3),
+                  }}
+                  whileInView={{
+                    opacity: 1,
+                    y: 0,
+                  }}
+                  onClick={() => {
+                    onClose();
+                    router(item.link);
+                  }}
+                  key={i.toString().concat(useId())}
+                  className=" mx-3 p-2 rounded  cursor-pointer  hover:text-white hover:bg-yellow-500 "
+                >
+                  {item.name}
+                </motion.span>
+              );
+            })}
           </div>
           <motion.div
             initial={{

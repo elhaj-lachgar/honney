@@ -1,5 +1,5 @@
 import { Home } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Fragment } from "react/jsx-runtime";
 type TProps = {
   link: string;
@@ -7,6 +7,7 @@ type TProps = {
 }[];
 function Bar({ location }: { location: TProps }) {
   const router = useNavigate();
+  const search = useLocation();
   return (
     <div className="flex items-center gap-x-2 text-gray-500 ">
       <Home
@@ -16,9 +17,16 @@ function Bar({ location }: { location: TProps }) {
       /{" "}
       {location.map((ele, i) => (
         <Fragment key={ele.link.concat(i.toString())}>
-          <a className="hover:underline hover:text-yellow-500" href={ele.link}>
-            {ele.name}
-          </a>
+          <Link
+            className={`hover:underline  hover:text-yellow-500 ${
+              search.pathname == ele.link && "text-yellow-500 underline "
+            }`}
+            to={ele.link}
+          >
+            {ele.name.length > 15
+              ? ele.name.substring(0, 15) + "..."
+              : ele.name}
+          </Link>
           {i != location.length - 1 && " /"}
         </Fragment>
       ))}

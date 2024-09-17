@@ -13,10 +13,12 @@ import { BASE_URL, PROFILE_SIDE_BAR } from "../../constant";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../context/AuthContextProvider";
 import { toastOption } from "../../lib";
+import { useAddressContext } from "../../context/AddressContextProvider";
 
 function ProfileSideBar() {
   const { onOpen, onClose, isOpen } = useDisclosure();
   const btnRef = useRef<null | HTMLInputElement>(null);
+  const { setLoad, load } = useAddressContext();
   const { setAuthUser } = useAuthContext();
   const router = useNavigate();
   const toast = useToast();
@@ -30,6 +32,7 @@ function ProfileSideBar() {
             setAuthUser(null);
             window.localStorage.removeItem("user");
             router("/");
+            setLoad(!load);
           } else {
             const option = toastOption("error", "signout failed");
             toast(option);
@@ -88,10 +91,12 @@ function ProfileSideBar() {
                   opacity: 1,
                   y: 0,
                 }}
+                key={index}
               >
                 <Link
                   className="flex items-center gap-x-2 py-2 px-1  rounded  hover:bg-yellow-500 hover:text-white cursor-pointer"
                   to={value.link}
+                  onClick={onClose}
                 >
                   <value.icon />
                   {value.name}

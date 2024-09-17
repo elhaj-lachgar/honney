@@ -3,23 +3,24 @@ import { TProductService } from "../constant/types";
 import { Button } from "@chakra-ui/react";
 import { useCardContext } from "../context/CardContextProvider";
 import StarRating from "react-star-ratings";
+import { Link } from "react-router-dom";
 
 function FilterCard({ product }: { product: TProductService }) {
   const { addToCard } = useCardContext();
   return (
     <div className="flex flex-col lg:flex-row rounded shadow border p-2 lg:px-3 w-full items-center justify-between">
       <div className="flex  flex-col lg:flex-row items-center gap-x-4 ">
-        <a href={"/" + product._id}>
+        <Link to={"/" + product._id}>
           <img
             src={product.imageUrls[0]}
             alt="image of product"
             className=" w-48 h-48 lg:w-36 lg:h-36 rounded-md"
           />
-        </a>
+        </Link>
         <div className="flex flex-col justify-between w-full lg:w-fit text-gray-500   font-serif ">
           <h1 className="text-black text-xl">{product.name}</h1>
           <h2>{product.category.name}</h2>
-          <div className="flex items-center">
+          <div className="flex w-full  flex-row-reverse" dir="ltr">
             <StarRating
               starDimension="20px"
               starSpacing="1px"

@@ -1,22 +1,18 @@
-import { useEffect, useState } from "react";
 import Banner from "../components/Banner";
 import Card from "../components/Card";
-import Categorys from "../components/Categorys";
 import Footer from "../components/Footer";
-import { toastOption } from "../lib";
-import { TErrorService, TProductService } from "../constant/types";
-import { BASE_URL } from "../constant";
-import { Skeleton, useToast } from "@chakra-ui/react";
+import { Skeleton } from "@chakra-ui/react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useCardContext } from "../context/CardContextProvider";
 import { Helmet } from "react-helmet";
+import { useHomeProductContext } from "../context/HomeProductContext";
+import Slider from "../components/Slider";
 
 function Home() {
-  const [products, setProducts] = useState<TProductService[]>([]);
-  const [loading, setLoading] = useState(false);
-  const toast = useToast();
   const { clearCard } = useCardContext();
   const [search] = useSearchParams();
+  const { ProductLoading, banner, bannerLoading, principalProduct, products } =
+    useHomeProductContext();
   const router = useNavigate();
   if (search.get("order") == "success") {
     window.localStorage.removeItem("card");
@@ -24,31 +20,6 @@ function Home() {
     router("/");
   }
 
-  const getProducts = () => {
-    const url = `${BASE_URL}/product`;
-    try {
-      setLoading(true);
-      fetch(url)
-        .then((response) => response.json())
-        .then((data) => {
-          if (data?.success) {
-            const product = data.products;
-            setProducts(product);
-          } else {
-            const option = toastOption("error", "featching error");
-            toast(option);
-          }
-        })
-        .finally(() => setLoading(false));
-    } catch (error:any) {
-      const err = error.response?.data as TErrorService;
-      const option = toastOption("error", err.error || "خطأ أثناء العملية ");
-      toast(option);
-    }
-  };
-  useEffect(() => {
-    getProducts();
-  }, []);
   return (
     <>
       <Helmet>
@@ -56,8 +27,14 @@ function Home() {
         <meta name="description" content="saga" />
       </Helmet>
       <div className="flex flex-col gap-y-8 ">
-        <Banner />
-        <Categorys />
+        {<Banner loading={ProductLoading} productId={principalProduct?._id} />}
+        {
+          bannerLoading
+          ?
+          <Skeleton className=""/>
+          :
+          <Slider banner={banner}/>
+        }
         <div className="flex flex-col w-11/12 gap-y-1 mx-auto">
           <p className="text-gray-500 text-sm">منتجات شائعة في المتجر</p>
           <h1 className="text-2xl font-serif flex items-center gap-x-1">
@@ -65,8 +42,8 @@ function Home() {
             <span className="border-b-[2px] border-[#dcb140]">رائجة</span>
           </h1>
         </div>
-        <div className=" grid grid-cols-1 max-w-screen-xl md:grid-cols-2 lg:grid-cols-3 gap-5 content-center md:content-around py-4 mx-auto  w-11/12 ">
-          {loading ? (
+        <div className="  grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 content-center justify-center gap-5  py-4 mx-auto w-11/12 ">
+          {ProductLoading ? (
             <>
               {[...Array(6)].map((_, i) => (
                 <Skeleton key={i} w={"300px"} h={"300px"} />

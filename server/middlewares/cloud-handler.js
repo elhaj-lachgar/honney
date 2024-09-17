@@ -44,8 +44,7 @@ export const MultipleCloudHandler = (folder, key) =>
 
         req.body[key] = newPath.map((img) => img.url);
       } catch (err) {
-        console.log(err);
-        return next(new ErrorHandler("upoald images faild"));
+        return next(new ErrorHandler("upoald images faild" , 400));
       }
     }
     return next();

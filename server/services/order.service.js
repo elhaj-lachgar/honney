@@ -2,12 +2,13 @@ import asynchandler from "express-async-handler";
 import OrderModule from "../modules/order.module.js";
 import UserModule from "../modules/user.module.js";
 import { OrderClientMail, OrderMail } from "../utils/sendMail.js";
-import ErrorHandler from '../utils/error-handler.js';
+import ErrorHandler from "../utils/error-handler.js";
 
 export const CreateOrder = asynchandler(async (req, res, next) => {
   const order = await (
     await OrderModule.create(req.body)
-  ).populate("address products.product");
+  )
+  .populate("address products.product");
 
   await OrderClientMail(order, order.address.name, order.address.email);
   await OrderMail(order, order.address.name);
@@ -23,9 +24,20 @@ export const CreateOrder = asynchandler(async (req, res, next) => {
   return res.status(200).json({ success: true, order });
 });
 
+export const getOrder = asynchandler(async (req, res, next) => {
+  const order = await OrderModule.findOne({ _id: req.params.orderId }).populate(
+    "products.product address"
+  );
+  if (!order) return next(new ErrorHandler("طلبية لاتوجد", 404));
+  return res.status(200).json({ order, success: true });
+});
 
-export const getOrder = asynchandler ( async (req , res , next ) => {
-  const order  = await OrderModule.findOne({_id:req.params.orderId}).populate("products.product address");
-  if(!order) return next( new ErrorHandler("طلبية لاتوجد" , 404));
-  return res.status(200).json({order , success : true})
+export const getOrderNotAuth = asynchandler(async (req, res, next) => {
+  const order = await OrderModule.findOne({
+    _id: req.body.orderId,
+  }).populate("products.product address");
+  if (!order) return next(new ErrorHandler("طلبية لاتوجد", 404));
+  const isValid = order.address?.email == req.body.email;
+  if (!isValid) return next(new ErrorHandler("طلبية لاتوجد", 404));
+  return res.status(200).json({ order, success: true });
 });

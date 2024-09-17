@@ -13,13 +13,13 @@ import { useCardContext } from "../../context/CardContextProvider";
 import ShoppingCardItem from "../ShoppingCardItem";
 import { useNavigate } from "react-router-dom";
 import { toastOption } from "../../lib";
-
 function CartModule() {
   const { onOpen, onClose, isOpen } = useDisclosure();
   const btnRef = useRef<null | HTMLInputElement>(null);
   const toast = useToast();
   const { card } = useCardContext();
   const router = useNavigate();
+
   return (
     <>
       <div
@@ -103,6 +103,7 @@ function CartModule() {
               <div className="flex flex-col h-full w-full p-2 overflow-auto no-scrollbar ">
                 {card.products.map((product) => (
                   <ShoppingCardItem
+                    onClose={onClose}
                     value="cart"
                     product={product.product}
                     productQuantity={product.productQuantity}
@@ -114,9 +115,9 @@ function CartModule() {
           )}
           <div className="py-4 bg-gray-100 border px-4 flex flex-col gap-y-2">
             <div className="flex justify-between   items-center ">
-              <h1 className="text-xl font-serif">مجموع</h1>
+              <h1 className="text-xl font-serif">مجموع</h1>{" "}
               {card.products[0] && (
-                <b>{card.products[0].product.currency + card.totalePrice}</b>
+                <b>{card.totalePrice + card.products[0].product.currency}</b>
               )}
             </div>
             <Button

@@ -4,9 +4,11 @@ import Loading from "../components/Loading";
 
 function MainLayout({ children }: { children: React.ReactNode }) {
   return (
-    <main className="flex flex-col">
+    <main className="flex flex-col relative">
       <Navbar />
-      <Suspense fallback={<Loading />}><div className= " mt-14 md:mt-12">{children}</div></Suspense>
+      <Suspense fallback={<Loading />}>
+        <div className="mt-14 md:mt-16">{children}</div>
+      </Suspense>
     </main>
   );
 }

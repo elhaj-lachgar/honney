@@ -70,7 +70,9 @@ export type TAddress = {
   city: string;
   email: string;
   name: string;
+  streat?: string;
   codePostal?: string;
+  phone : string;
 };
 
 export type TOrder = {
@@ -98,3 +100,9 @@ export type TErrorValidator = [
     location: string;
   }
 ];
+
+
+export type TBanner = {
+  imageUrls: string[];
+  _id: string;
+};

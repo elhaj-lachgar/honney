@@ -68,7 +68,6 @@ function CardContextProvider({ children }: { children: React.ReactNode }) {
         p.product._id == product._id &&
         p.productQuantity._id == productQuantity._id
     );
-    console.log(index);
     if (index <= -1) {
       const arr: TProductContext[] = [
         ...card.products,

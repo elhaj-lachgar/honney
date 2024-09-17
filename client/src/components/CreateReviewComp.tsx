@@ -10,12 +10,14 @@ import { BASE_URL, DEFAULT_HEADER } from "../constant";
 import { TErrorService } from "../constant/types";
 import axios from "axios";
 import { useState } from "react";
+
 type TProps = {
   load: boolean;
   productId: string;
   setLoad: (vl: boolean) => void;
   value: boolean;
 };
+
 
 function CreateReviewComp({ load, setLoad, productId, value = false }: TProps) {
   const [loading, setLoading] = useState(false);
@@ -25,6 +27,7 @@ function CreateReviewComp({ load, setLoad, productId, value = false }: TProps) {
     formState: { errors },
     register,
     handleSubmit,
+    resetField 
   } = useForm<TReviewCredentials>({
     resolver,
   });
@@ -49,6 +52,7 @@ function CreateReviewComp({ load, setLoad, productId, value = false }: TProps) {
       const res = await axios.post(url, data, { headers: DEFAULT_HEADER });
       if (res.data?.success) {
         const option = toastOption("success", "شكرا لمراجعتك");
+        resetField('content');
         toast(option);
         setLoad(!load);
       } else {
@@ -91,6 +95,7 @@ function CreateReviewComp({ load, setLoad, productId, value = false }: TProps) {
               <Textarea
                 placeholder="نرحب بجميع أرائكم ..."
                 {...register("content")}
+                
               />
               {errors.content && (
                 <p className="text-red-500 italic text-sm">
@@ -112,12 +117,13 @@ function CreateReviewComp({ load, setLoad, productId, value = false }: TProps) {
           </form>
         </div>
       ) : (
-        <p className="text-sm text-red-500 italic w-full text-center py-2">
+        <p className="text-sm text-red-500 italic w-full flex justify-center items-center text-center py-2">
           {"يمكنك التعليق بعد توصلك بالمنتج"}
         </p>
       )}
     </>
   );
 }
+
 
 export default CreateReviewComp;

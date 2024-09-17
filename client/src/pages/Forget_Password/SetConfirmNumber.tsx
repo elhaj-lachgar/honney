@@ -58,7 +58,7 @@ function SetConfirmNumber() {
         const option = toastOption("error", message);
         toast(option);
       }
-    } catch (error : any) {
+    } catch (error: any) {
       const message = "خطأ أثناء العملية ";
       const err = error?.response?.data as TErrorService;
       const option = toastOption("error", err.error || message);
@@ -81,10 +81,15 @@ function SetConfirmNumber() {
     >
       <h1 className="text-2xl font-serif">إرسال رقم</h1>
       <div className="flex flex-col gap-y-1">
-        <label htmlFor="email" className="font-serif text-xl">
+        <label htmlFor="restCode" className="font-serif text-xl">
           الرقم
         </label>
-        <Input type="number" placeholder="000000" {...register("restCode")} />
+        <Input
+          type="number"
+          id="restCode"
+          placeholder="000000"
+          {...register("restCode")}
+        />
         {errors.restCode && (
           <p className="text-red-500 text-sm italic">
             {errors.restCode.message}
@@ -102,6 +107,8 @@ function SetConfirmNumber() {
       >
         {loading ? "...المرجو الإنتظار" : "اعادة ارسال الرمز"}
       </p>
+
+      <p className="text-gray-400 text-sm px-3">الرجاء تفقد بريدك الإلكتروني</p>
       <Button
         bg={"#dcb140"}
         _hover={{

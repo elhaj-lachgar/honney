@@ -1,42 +1,15 @@
-import { CalendarClockIcon, Mail, User } from "lucide-react";
+import { CalendarClockIcon, Mail, MapPinOff, User } from "lucide-react";
 import ProfileBanner from "../../components/profile/ProfileBanner";
 import AdressModule from "../../components/profile/AdressModule";
 import { useAuthContext } from "../../context/AuthContextProvider";
-import { BASE_URL } from "../../constant";
-import axios from "axios";
-import { toastOption } from "../../lib";
-import { useToast } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { TAddress, TErrorService } from "../../constant/types";
+import { Skeleton} from "@chakra-ui/react";
 import { Helmet } from "react-helmet";
+import AddressItem from "../../components/AddressItem";
+import { useAddressContext } from "../../context/AddressContextProvider";
 
 function ProfilePage() {
   const { authUser } = useAuthContext();
-  const toast = useToast();
-  const [load, setLoad] = useState(false);
-  const [addresses, setAdresses] = useState<TAddress[]>([]);
-  const getAddresses = async () => {
-    const url = `${BASE_URL}/address/get-address-auth`;
-    try {
-      const res = await axios.get(url);
-      const Object_data = res.data;
-      if (Object_data?.success) {
-        setAdresses(Object_data.addresses);
-      } else {
-        const option = toastOption("error", "خطّأ في عملية");
-        toast(option);
-      }
-    } catch (error:any) {
-      const err = error.response?.data as TErrorService;
-      const option = toastOption("error", err.error || "خطأ أثناء العملية ");
-      toast(option);
-    }
-  };
-
-  useEffect(() => {
-    getAddresses();
-  }, [load]);
-
+  const { addresses, load, setLoad, loading } = useAddressContext();
   return (
     <>
       <Helmet>
@@ -62,18 +35,29 @@ function ProfilePage() {
         <div className="flex px-5 py-2  flex-col gap-y-4 m-5  w-11/12 md:w-2/3 lg:w-1/2 border rounded-md shadow-md">
           <h1 className="text-2xl">العنوان</h1>
           <hr />
-          <div className="min-h-[75px]">
-            {addresses.map((adress) => (
-              <div
-                key={adress._id}
-                className="flex border  gap-x-2 px-2 py-1 rounded-md cursor-pointer"
-              >
-                <div className="flex flex-col ">
-                  <h1>{adress.city}</h1>
-                  <p>{adress.codePostal}</p>
+          <div className="min-h-[75px] flex flex-col gap-y-2">
+            {loading ? (
+              <Skeleton w={"full"} h={"12"} borderRadius={"10px"} />
+            ) : addresses.length > 0 ? (
+              addresses.map((address) => (
+                <AddressItem
+                  key={address._id}
+                  address={address}
+                  load={load}
+                  setLoad={setLoad}
+                  isProfile={false}
+                />
+              ))
+            ) : (
+              <div className="flex items-center justify-center">
+                <div className="flex flex-col gap-y-2 items-center">
+                  <MapPinOff className="size-12 text-yellow-500" />
+                  <p className="text-lg text-gray-600">
+                    لا يوجد عنوان، المرجو إضافته{" "}
+                  </p>
                 </div>
               </div>
-            ))}
+            )}
           </div>
           <hr />
           <AdressModule load={load} setLoad={setLoad} />

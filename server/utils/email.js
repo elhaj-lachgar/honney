@@ -11,7 +11,7 @@ export function verficationEmail(restCode, username) {
       overflow: hidden;
       line-height: 1px;
       opacity: 0;
-      max-height: 0;
+      max-height: 0;F
       max-width: 0;
     "
   >
@@ -358,7 +358,7 @@ ${" "} ${"+212" + order?.address?.phone}
                                               product.product.name +
                                               " " +
                                               product.productQuantity.quantity +
-                                              "ml"
+                                              "g"
                                             }</td>
                                             <td style="border:1px solid #dddddd ; text-align:left ; padding: 8px;">${
                                               product.quantity
@@ -578,7 +578,7 @@ export function OrderAdminContent(order, userName) {
                                             <td style="border:1px solid #dddddd ; text-align:left ; padding: 8px;">${
                                               product.product.name +
                                               " " +
-                                              product.productQuantity.quantity
+                                              product.productQuantity.quantity +"g"
                                             }</td>
                                             <td style="border:1px solid #dddddd ; text-align:left ; padding: 8px;">${
                                               product.quantity

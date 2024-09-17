@@ -5,7 +5,7 @@ const limiter = (time, limit) =>
     windowMs: time * 60 * 1000,
     limit: limit,
     message: {
-      error: "Too many requests please try again after" + time + "minutes",
+      error:`تجاوزت الحد المسموح به من الطلب ، رجاء إنتظر ${time} دقيقة .`,
       field: 400,
     },
     validate: {

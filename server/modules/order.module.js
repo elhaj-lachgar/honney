@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const OrderSchema = new mongoose.Schema(
   {
@@ -17,8 +17,8 @@ const OrderSchema = new mongoose.Schema(
           type: Number,
           default: 1,
         },
-        productQuantity : {
-          number : Number,
+        productQuantity: {
+          number: Number,
           quantity: Number,
         },
       },
@@ -36,8 +36,13 @@ const OrderSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    
+
     Delaiverd_At: Date,
+    coupon: {
+      type: Schema.ObjectId,
+      ref: "coupon",
+    },
+    
   },
   { timestamps: true }
 );

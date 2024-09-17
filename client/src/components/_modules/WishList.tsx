@@ -99,6 +99,7 @@ function WishList() {
             <div className="flex flex-col h-full w-full p-2  ">
               {products.map((product) => (
                 <ShoppingCardItem
+                  onClose={onClose}
                   value="wishlist"
                   product={product}
                   key={product._id}

@@ -57,8 +57,6 @@ export const OrderMail = async (order, user) => {
     });
 };
 
-
-
 export const OrderClientMail = async (order, user, email) => {
   const transport = nodemailer.createTransport({
     host: "smtp.gmail.com",
@@ -80,6 +78,6 @@ export const OrderClientMail = async (order, user, email) => {
       html: htmlContent,
     })
     .catch((err) => {
-      console.error(err);
+      console.log(err);
     });
 };

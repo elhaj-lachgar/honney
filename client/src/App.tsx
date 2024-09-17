@@ -22,151 +22,173 @@ import axios from "axios";
 import ContactUs from "./pages/ContactUs";
 import NotFoundPage from "./pages/NotFoundPage";
 import OrderProfilePage from "./pages/profile/OrderProfilePage";
+import OrderStatusPage from "./pages/OrderStatusPage";
+import OrderStatusDetails from "./pages/OrderStatusDetails";
+import { Suspense } from "react";
+import Loading from "./components/Loading";
 
 function App() {
   const { authUser } = useAuthContext();
   axios.defaults.withCredentials = true;
   return (
-    <Routes>
-      <Route
-        path="/"
-        element={
-          <MainLayout>
-            <Home />
-          </MainLayout>
-        }
-      />
+    <Suspense fallback={<Loading/>}>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <MainLayout>
+              <Home />
+            </MainLayout>
+          }
+        />
 
-      <Route
-        path="/auth/sign-up"
-        element={
-          <AuthLayout>
-            <SignUp />
-          </AuthLayout>
-        }
-      />
-      <Route
-        path="/auth/sign-in"
-        element={
-          <AuthLayout>
-            <SignIn />
-          </AuthLayout>
-        }
-      />
-      <Route
-        path="/cart"
-        element={
-          <MainLayout>
-            <ShoppingCart />
-          </MainLayout>
-        }
-      />
-      <Route
-        path="/about"
-        element={
-          <MainLayout>
-            <About />
-          </MainLayout>
-        }
-      />
-      <Route
-        path="/contact-us"
-        element={
-          <MainLayout>
-            <ContactUs />
-          </MainLayout>
-        }
-      />
-      <Route
-        path="/order"
-        element={
-          <MainLayout>
-            <OrderPage />
-          </MainLayout>
-        }
-      />
-      <Route
-        path="/confirm/:orderId"
-        element={
-          <MainLayout>
-            <ConfirmPage />
-          </MainLayout>
-        }
-      />
-      <Route
-        path="/forget-password/set-email"
-        element={<ForgetPasswordLayout children={<SetEmail />} />}
-      />
-      <Route
-        path="/forget-password/rest-code"
-        element={<ForgetPasswordLayout children={<SetConfirmNumber />} />}
-      />
+        <Route
+          path="/auth/sign-up"
+          element={
+            <AuthLayout>
+              <SignUp />
+            </AuthLayout>
+          }
+        />
+        <Route
+          path="/auth/sign-in"
+          element={
+            <AuthLayout>
+              <SignIn />
+            </AuthLayout>
+          }
+        />
+        <Route
+          path="/cart"
+          element={
+            <MainLayout>
+              <ShoppingCart />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/about"
+          element={
+            <MainLayout>
+              <About />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/contact-us"
+          element={
+            <MainLayout>
+              <ContactUs />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/order-status"
+          element={
+            <MainLayout>
+              <OrderStatusPage />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/order-status/:orderId"
+          element={
+            <MainLayout>
+              <OrderStatusDetails />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/order"
+          element={
+            <MainLayout>
+              <OrderPage />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/confirm/:orderId"
+          element={
+            <MainLayout>
+              <ConfirmPage />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/forget-password/set-email"
+          element={<ForgetPasswordLayout children={<SetEmail />} />}
+        />
+        <Route
+          path="/forget-password/rest-code"
+          element={<ForgetPasswordLayout children={<SetConfirmNumber />} />}
+        />
 
-      <Route
-        path="/forget-password/set-password"
-        element={<ForgetPasswordLayout children={<SetPassword />} />}
-      />
-      <Route
-        path="/search/:searchId"
-        element={
-          <MainLayout>
-            <SearchPage />
-          </MainLayout>
-        }
-      />
-      <Route
-        path="/profile/me"
-        element={
-          authUser ? (
-            <ProfileLayout>
-              <ProfilePage />
-            </ProfileLayout>
-          ) : (
-            <Navigate to={"/"} />
-          )
-        }
-      />
-      <Route
-        path="/profile/update-profile"
-        element={
-          authUser ? (
-            <ProfileLayout>
-              <EditProfile />
-            </ProfileLayout>
-          ) : (
-            <Navigate to={"/"} />
-          )
-        }
-      />
-      <Route
-        path="/profile/orders"
-        element={
-          authUser ? (
-            <ProfileLayout>
-              <OrderProfilePage/>
-            </ProfileLayout>
-          ) : (
-            <Navigate to={"/"} />
-          )
-        }
-      />
-      <Route
-        path="/:id"
-        element={
-          <MainLayout>
-            <HomeDetails />
-          </MainLayout>
-        }
-      />
-      <Route
-        path="*"
-        element={
-          <MainLayout>
-            <NotFoundPage />
-          </MainLayout>
-        }
-      />
-    </Routes>
+        <Route
+          path="/forget-password/set-password"
+          element={<ForgetPasswordLayout children={<SetPassword />} />}
+        />
+        <Route
+          path="/search/:searchId"
+          element={
+            <MainLayout>
+              <SearchPage />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/profile/me"
+          element={
+            authUser ? (
+              <ProfileLayout>
+                <ProfilePage />
+              </ProfileLayout>
+            ) : (
+              <Navigate to={"/"} />
+            )
+          }
+        />
+        <Route
+          path="/profile/update-profile"
+          element={
+            authUser ? (
+              <ProfileLayout>
+                <EditProfile />
+              </ProfileLayout>
+            ) : (
+              <Navigate to={"/"} />
+            )
+          }
+        />
+        <Route
+          path="/profile/orders"
+          element={
+            authUser ? (
+              <ProfileLayout>
+                <OrderProfilePage />
+              </ProfileLayout>
+            ) : (
+              <Navigate to={"/"} />
+            )
+          }
+        />
+        <Route
+          path="/:id"
+          element={
+            <MainLayout>
+              <HomeDetails />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="*"
+          element={
+            <MainLayout>
+              <NotFoundPage />
+            </MainLayout>
+          }
+        />
+      </Routes>
+    </Suspense>
   );
 }
 

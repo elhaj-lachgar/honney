@@ -2,6 +2,7 @@ import { Minus, Plus, X } from "lucide-react";
 import { Input } from "@chakra-ui/react";
 import { useCardContext } from "../context/CardContextProvider";
 import { TProductService } from "../constant/types";
+import { Link } from "react-router-dom";
 
 function MobileCartItem({
   product,
@@ -26,16 +27,16 @@ function MobileCartItem({
         />
       </div>
       <hr />
-      <a href={"/" + product._id} className="mx-auto p-2">
+      <Link to={"/" + product._id} className="mx-auto p-2">
         <img src={product.imageUrls[0]} alt="" className="w-48 h-48" />
-      </a>
+      </Link>
       <hr />
       <div className="flex flex-col">
         <div className="flex items-center  py-2 px-4">
           <div className="flex-1 font-serif text-xl"> منتج : </div>
           <div className="flex-1 flex gap-x-1 justify-end">
-            {product.name + "  "}
-            <span dir="ltr">{productQuantity.quantity + " ml"}</span>
+            {product.name.substring(0,10) +"..." + "  "}
+            <span dir="ltr">{productQuantity.quantity + " g"}</span>
           </div>
         </div>
         <hr />

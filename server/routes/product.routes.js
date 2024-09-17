@@ -8,6 +8,7 @@ import {
   getProducts,
   getRelatedProducts,
   GetNames,
+  getProductPrincipal
 } from "../services/product.service.js";
 
 
@@ -23,6 +24,8 @@ router.get(
   getRelatedProducts
 );
 
+
+router.get('/principal-honney' , getProductPrincipal);
 
 router.get("/get-names", GetNames);
 

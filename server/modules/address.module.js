@@ -16,6 +16,7 @@ const AddressSchema = new mongoose.Schema(
       required: [true, "الرجاء ادخال المدينة"],
     },
     codePostal: Number,
+    streat:String,
     NotAuth: Number,
   },
   { timestamps: true }

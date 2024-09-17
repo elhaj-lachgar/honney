@@ -24,6 +24,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
+import { useAddressContext } from "../../context/AddressContextProvider";
 
 function SignUp() {
   const [view, setView] = useState(true);
@@ -34,6 +35,7 @@ function SignUp() {
   const { onOpen, onClose, isOpen } = useDisclosure();
   const btnRef = useRef<null | HTMLInputElement>(null);
   const [restCode, setRestCode] = useState("");
+  const { setLoad, load } = useAddressContext();
   const {
     formState: { errors },
     register,
@@ -43,7 +45,7 @@ function SignUp() {
     resolver,
   });
 
-  const GoogleSignUp = async (email : string , name : string , avatar : string) => {
+  const GoogleSignUp = async (email: string, name: string, avatar: string) => {
     try {
       const data = JSON.stringify({
         email,
@@ -59,6 +61,7 @@ function SignUp() {
         const option = toastOption("success", "sign up successfly" + user.name);
         toast(option);
         router("/");
+        setLoad(!load);
       } else {
         const error_message = "Sign up failed";
         const option = toastOption("error", error_message);
@@ -84,6 +87,7 @@ function SignUp() {
         window.localStorage.setItem("user", JSON.stringify(user));
         const option = toastOption("success", "sign up is successful");
         toast(option);
+        setLoad(!load);
         router("/");
       } else {
         const option = toastOption("error", "sign up is failed");
@@ -134,6 +138,7 @@ function SignUp() {
           </InputLeftElement>
           <Input
             type="text"
+            id="name"
             placeholder="أدخل الأسم..."
             {...register("name")}
           />
@@ -150,6 +155,7 @@ function SignUp() {
           </InputLeftElement>
           <Input
             type="email"
+            id="email"
             placeholder="أدخل بريد ..."
             {...register("email")}
           />
@@ -173,6 +179,7 @@ function SignUp() {
           </InputLeftElement>
           <Input
             type={!view ? "text" : "password"}
+            id="password"
             placeholder=" أدخل كلمة السر..."
             {...register("password")}
           />
@@ -219,11 +226,13 @@ function SignUp() {
             <div className="p-4 flex flex-col gap-y-4">
               <h1 className="text-2xl font-serif">إرسال رقم</h1>
               <div className="flex flex-col gap-y-1">
-                <label htmlFor="email" className="font-serif text-xl">
+                <label htmlFor="rest-code" className="font-serif text-xl">
                   الرقم
                 </label>
                 <Input
                   type="number"
+                  id="rest-code"
+                  name="rest-code"
                   placeholder="000000"
                   onChange={(e) => setRestCode(e.currentTarget.value)}
                 />

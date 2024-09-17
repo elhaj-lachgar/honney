@@ -89,6 +89,7 @@ function ChangeAvatarModule({ load, setLoad }: TProps) {
               className="cursor-pointer"
             >
               <img
+    
                 src={url || "/log/log.png"}
                 alt="avatar of user"
                 className="w-36 h-36 rounded-full  object-cover"
@@ -97,6 +98,7 @@ function ChangeAvatarModule({ load, setLoad }: TProps) {
                 type="file"
                 className="hidden"
                 id="avatar"
+                name="avatar"
                 onChange={(e) => {
                   const {
                     currentTarget: { files },
