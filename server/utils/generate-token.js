@@ -8,7 +8,7 @@ const GenerateToken = (userId, res) => {
   res.cookie("jwt", token, {
     httpOnly: true,
     sameSite: "strict",
-    expires: new Date(Date.now() + 1 * 1000),
+    expires: new Date(Date.now() + 10* 24*3600* 1000),
     secure: process.env.NODE_ENV !== "dev",
   });
 };
