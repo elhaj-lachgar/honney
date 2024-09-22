@@ -17,7 +17,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthContextProvider>
-        <GoogleOAuthProvider clientId={import.meta.env.GOOGLE_API_KEY}>
+        <GoogleOAuthProvider clientId={import.meta.env.REACT_APP_GOOGLE_API_KEY}>
           <CardContextProvider>
             <WishListContextProvider>
               <ChakraProvider>
