@@ -5,6 +5,7 @@ import encrypt from "bcryptjs";
 import GenerateToken from "../utils/generate-token.js";
 import crypt from "crypto";
 import { VerficationMail } from "../utils/sendMail.js";
+import userFilter from "../utils/userFilter.js";
 
 export const signIn = asynchandler(async (req, res, next) => {
   const { password, email } = req.body;
@@ -28,8 +29,7 @@ export const signIn = asynchandler(async (req, res, next) => {
 
   GenerateToken(user._id.toString(), res);
 
-  const virtual_user = user;
-  virtual_user.password = undefined;
+  const virtual_user = userFilter(user);
 
   return res.status(200).json({ success: true, user: virtual_user });
 });
@@ -69,7 +69,7 @@ export const signOut = asynchandler(async (req, res) => {
 export const googleSignAuth = asynchandler(async (req, res, next) => {
   let user = await UserModule.findOne({
     email: req.body.email,
-  }).select("-role -password");
+  })
 
   if (!user) {
     req.body.password = Math.floor(100000 + Math.random() * 900000)
@@ -77,9 +77,9 @@ export const googleSignAuth = asynchandler(async (req, res, next) => {
       .toString();
     req.body.isValidSign = true;
     user = await UserModule.create(req.body);
-    user.role = undefined;
-    user.password = undefined;
   }
+
+  user = userFilter(user);
 
   GenerateToken(user._id.toString(), res);
   return res.status(200).json({ user, success: true });
@@ -151,7 +151,6 @@ export const VerficationSignUp = asynchandler(async (req, res, next) => {
   user.isValidSign = true;
   await user.save();
   GenerateToken(user._id.toString(), res);
-  const virtual_user = user;
-  virtual_user.password = undefined;
+  const virtual_user = userFilter(user);
   return res.status(200).json({ success: true, user: virtual_user });
 });

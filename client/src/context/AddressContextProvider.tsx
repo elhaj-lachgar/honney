@@ -47,10 +47,14 @@ function AddressContextProvider({ children }: { children: React.ReactNode }) {
 
   const getAddressNotAuth = async () => {
     const url = `${BASE_URL}/address/get-address-not-auth`;
-    const addresses = JSON.parse(
-      window.localStorage.getItem("addresses") as string
-    ) as string[];
-    if (!addresses || addresses.length == 0) return;
+    const addresses =
+      (JSON.parse(
+        window.localStorage.getItem("addresses") as string
+      ) as string[]) || [];
+    if (!addresses || addresses.length == 0) {
+      setLoading(false);
+      return;
+    }
     const data = JSON.stringify({ addresses });
     try {
       const res = await axios.post(url, data, { headers: DEFAULT_HEADER });

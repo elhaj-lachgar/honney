@@ -12,8 +12,8 @@ export const deleteImage = async (filename) => {
   }
 };
 
-export const saveImage = (buffer, file_name, option) => {
-  sharp(buffer)
+export const saveImage = async (buffer, file_name, option) => {
+  await sharp(buffer)
     .toFormat("png")
     .toFile(path.join(import.meta.dirname, `../upload/${option}/${file_name}`));
 };

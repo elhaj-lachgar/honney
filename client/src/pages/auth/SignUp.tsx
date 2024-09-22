@@ -28,6 +28,9 @@ import { useAddressContext } from "../../context/AddressContextProvider";
 
 function SignUp() {
   const [view, setView] = useState(true);
+  const [confirmView, setConfirmView] = useState(true);
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [confirmError, setConfirmError] = useState("");
   const { setAuthUser } = useAuthContext();
   const [loading, setLoading] = useState(false);
   const toast = useToast();
@@ -103,6 +106,10 @@ function SignUp() {
   const SignUpHandler = async ({ email, password, name }: TAuthCredentials) => {
     const url = BASE_URL + "/auth/sign-up";
     const data = JSON.stringify({ email, password, name });
+    if (confirmPassword != password) {
+      setConfirmError("كلمة المرور خطاء ");
+      return;
+    }
     setLoading(true);
     try {
       const res = await axios.post(url, data, { headers: DEFAULT_HEADER });
@@ -188,6 +195,37 @@ function SignUp() {
           <p className="text-sm italic text-red-500">
             {errors.password.message}
           </p>
+        )}
+      </div>
+      <div className="flex flex-col gap-y-1">
+        <label htmlFor="confirm_password"> تأكيد كلمة السر</label>
+        <InputGroup>
+          <InputLeftElement>
+            {confirmView ? (
+              <Eye
+                className="cursor-pointer"
+                onClick={() => setConfirmView(!confirmView)}
+              />
+            ) : (
+              <EyeOff
+                className="cursor-pointer"
+                onClick={() => setConfirmView(!confirmView)}
+              />
+            )}
+          </InputLeftElement>
+          <Input
+            type={!confirmView ? "text" : "password"}
+            id="confirm_password"
+            placeholder=" أدخل كلمة السر..."
+            name="confirm_password"
+            onClick={(e) => {
+              setConfirmPassword(e.currentTarget.value);
+              setConfirmError("");
+            }}
+          />
+        </InputGroup>
+        {confirmError && (
+          <p className="text-sm italic text-red-500">{confirmError}</p>
         )}
       </div>
       <GoogleLogin

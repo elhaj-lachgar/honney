@@ -1,18 +1,16 @@
 import { TProductService } from "../constant/types";
 import { motion } from "framer-motion";
 import { useCardContext } from "../context/CardContextProvider";
-import { Heart, ShoppingBasket } from "lucide-react";
-import { useWishListContext } from "../context/WishListContextProvider";
+import { ShoppingBasket } from "lucide-react";
 import { Button } from "@chakra-ui/react";
 import StarRatings from "react-star-ratings";
 import { Link } from "react-router-dom";
+import LikeButton from "./LikeButton";
 
 function Card({ product }: { product: TProductService }) {
   const { card, addToCard } = useCardContext();
-  const { products, addProduct, deleteProduct } = useWishListContext();
   const isExiste =
-    card.products.findIndex((pr) => pr.product._id == product._id) > -1;
-  const isLiked = products.findIndex((pr) => pr._id == product._id) > -1;
+    card.products.findIndex((pr) => pr.product._id == product._id) > -1;;
 
   return (
     <motion.div className="flex flex-col  gap-y-3 border  rounded-md hover:shadow-lg  group items-center p-4 min-w-[300px] max-w-[400px]  ">
@@ -24,20 +22,7 @@ function Card({ product }: { product: TProductService }) {
             className=" w-full h-[300px] object-cover cursor-pointer  rounded"
           />
         </Link>
-
-        <Heart
-          className={`bottom-1.5  cursor-pointer right-1.5 p-1  size-7 ${
-            !isLiked ? "color bg-white" : "text-white bg-color"
-          } rounded-full absolute`}
-          onClick={() => {
-            if (!isLiked) {
-              const obj = { rating: 1, ...product };
-              addProduct(obj);
-              return;
-            }
-            deleteProduct(product);
-          }}
-        />
+        <LikeButton product={product} value="card"/>
       </div>
       <div className="flex flex-col font-serif  w-full ">
         <h1 className="text-lg">{product.name}</h1>

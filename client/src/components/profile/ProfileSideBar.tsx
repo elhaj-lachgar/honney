@@ -22,6 +22,7 @@ function ProfileSideBar() {
   const { setAuthUser } = useAuthContext();
   const router = useNavigate();
   const toast = useToast();
+
   const signOut = () => {
     const url = BASE_URL + "/auth/sign-out";
     try {

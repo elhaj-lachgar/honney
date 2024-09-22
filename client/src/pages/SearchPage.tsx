@@ -160,7 +160,7 @@ function SearchPage() {
                   <hr />
                   <div className="p-4 flex flex-col gap-y-4 ">
                     <div className="flex items-center justify-between gap-x-2">
-                      <div className="flex flex-col relative">
+                      <div className="flex flex-col relative flex-[6]">
                         <Input
                           placeholder="البحث.."
                           value={keyword}
@@ -198,20 +198,22 @@ function SearchPage() {
                           </div>
                         )}
                       </div>
-                      <Button
-                        bg={"#dcb140"}
-                        _hover={{
-                          backgroundColor: "#F9C349",
-                        }}
-                        color={"white"}
-                        onClick={() => {
-                          if (!category_) return;
-                          getProducts(category_, keyword, true);
-                          onClose();
-                        }}
-                      >
-                        البحث
-                      </Button>
+                      <div className="flex-1">
+                        <Button
+                          bg={"#dcb140"}
+                          _hover={{
+                            backgroundColor: "#F9C349",
+                          }}
+                          color={"white"}
+                          onClick={() => {
+                            if (!category_) return;
+                            getProducts(category_, keyword, true);
+                            onClose();
+                          }}
+                        >
+                          البحث
+                        </Button>
+                      </div>
                     </div>
                     <hr />
                     <h1 className="font-serif text-xl ">تصنيفات</h1>
@@ -260,7 +262,7 @@ function SearchPage() {
             <div className="flex-1 hidden h-fit  gap-y-3 border w-full p-3 rounded-md shadow-xl lg:flex flex-col">
               <h1 className="font-serif text-xl "></h1>
               <div className="flex items-center justify-between gap-x-2">
-                <div className="flex flex-col relative">
+                <div className="flex flex-col flex-[6] relative">
                   <Input
                     placeholder="البحث.."
                     value={keyword}
@@ -297,19 +299,21 @@ function SearchPage() {
                     </div>
                   )}
                 </div>
-                <Button
-                  bg={"#dcb140"}
-                  _hover={{
-                    backgroundColor: "#F9C349",
-                  }}
-                  color={"white"}
-                  onClick={() => {
-                    if (!category_) return;
-                    getProducts(category_);
-                  }}
-                >
-                  البحث
-                </Button>
+                <div className="flex-1">
+                  <Button
+                    bg={"#dcb140"}
+                    _hover={{
+                      backgroundColor: "#F9C349",
+                    }}
+                    color={"white"}
+                    onClick={() => {
+                      if (!category_) return;
+                      getProducts(category_);
+                    }}
+                  >
+                    البحث
+                  </Button>
+                </div>
               </div>
               <hr />
               <h1 className="font-serif text-xl ">تصنيفات</h1>

@@ -12,11 +12,12 @@ import CategoryContextProvider from "./context/CategoryContextProvider.tsx";
 import ProductNameContext from "./context/ProductNameContext.tsx";
 import AddressContextProvider from "./context/AddressContextProvider.tsx";
 import HomeProductContextProvider from "./context/HomeProductContext.tsx";
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthContextProvider>
-        <GoogleOAuthProvider clientId="306990860718-s4eapso2pq7luh19u41hdv46o6bclihe.apps.googleusercontent.com">
+        <GoogleOAuthProvider clientId={import.meta.env.GOOGLE_API_KEY}>
           <CardContextProvider>
             <WishListContextProvider>
               <ChakraProvider>

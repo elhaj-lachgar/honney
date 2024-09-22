@@ -2,6 +2,7 @@ import UserModule from "../modules/user.module.js";
 import ErrorHandler from "../utils/error-handler.js";
 import expressAsyncHandler from "express-async-handler";
 import { deleteImage } from "../utils/image-handler.js";
+import userFilter from "../utils/userFilter.js";
 
 export const UpdateProfile = expressAsyncHandler(async (req, res, next) => {
   const user = await UserModule.findOneAndUpdate(
@@ -10,8 +11,8 @@ export const UpdateProfile = expressAsyncHandler(async (req, res, next) => {
     { new: true }
   ).select("-role -password");
   if (!user) return next(new ErrorHandler("مستخدم غير موجود", 404));
-
-  return res.status(200).json({ success: true, user });
+  const virtual_user = userFilter(user);
+  return res.status(200).json({ success: true, user: virtual_user });
 });
 
 export const ChangeAvatar = expressAsyncHandler(async (req, res, next) => {
@@ -57,19 +58,17 @@ export const DeleteAvatar = expressAsyncHandler(async (req, res, next) => {
 
 export const GetUser = expressAsyncHandler(async (req, res) => {
   const user = await (
-    await UserModule.findOne({ _id: req.user._id })
-      .select("-role -password")
-      .populate("userOrder")
+    await UserModule.findOne({ _id: req.user._id }).populate("userOrder")
   ).populate("userOrder.address userOrder.products.product");
-  return res.status(200).json({ user, success: true });
+
+  const virtual_user = userFilter(user);
+  return res.status(200).json({ user: virtual_user, success: true });
 });
 
-
 export const getUserReview = expressAsyncHandler(async (req, res) => {
-  const user = await UserModule.findOne({ _id: req.params.userId }).select(
-    "-role -password"
-  );
-  return res.status(200).json({ user, success: true });
+  const user = await UserModule.findOne({ _id: req.params.userId });
+  const virtual_user = userFilter(user);
+  return res.status(200).json({ user: virtual_user, success: true });
 });
 
 export const UpdateRole = expressAsyncHandler(async (req, res, next) => {

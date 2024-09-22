@@ -1,12 +1,11 @@
 import { Button, Skeleton, useToast } from "@chakra-ui/react";
 import { toastOption } from "../lib";
-import { Heart, ShoppingBasket } from "lucide-react";
+import { ShoppingBasket } from "lucide-react";
 import StarRating from "react-star-ratings";
 import Card from "../components/Card";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { TErrorService, TProductService } from "../constant/types";
 import { useEffect, useRef, useState } from "react";
-import { useWishListContext } from "../context/WishListContextProvider";
 import { useCardContext } from "../context/CardContextProvider";
 import ImageModule from "../components/_modules/ImageModule";
 import { Helmet } from "react-helmet";
@@ -15,6 +14,7 @@ import axios from "axios";
 import Bar from "../components/Bar";
 import ReviewItem from "../components/ReviewItem";
 import CreateReviewComp from "../components/CreateReviewComp";
+import LikeButton from "../components/LikeButton";
 
 function HomeDetails() {
   const { id } = useParams();
@@ -25,7 +25,6 @@ function HomeDetails() {
   const [selectedQuantity, setSelectedQuantity] = useState("");
   const [product, setProduct] = useState<TProductService | null>(null);
   const [loading, setLoading] = useState(true);
-  const { products, addProduct, deleteProduct } = useWishListContext();
   const [related, setRelated] = useState<TProductService[]>([]);
   const ref = useRef<HTMLDivElement | null>(null);
   const { addToCard } = useCardContext();
@@ -58,8 +57,6 @@ function HomeDetails() {
   useEffect(() => {
     ref?.current?.scrollIntoView({ behavior: "smooth" });
   }, [id, ref]);
-
-  const isLiked = products.findIndex((product) => product._id == id) > -1;
 
   const location: { name: string; link: string }[] = [];
 
@@ -226,18 +223,7 @@ function HomeDetails() {
                     إضافة إلى سلة
                   </Button>
                 </div>
-                <Heart
-                  onClick={() => {
-                    if (!isLiked) {
-                      addProduct(product);
-                      return;
-                    }
-                    deleteProduct(product);
-                  }}
-                  className={`bottom-1.5  cursor-pointer right-1.5 p-1  size-8 ${
-                    !isLiked ? "color bg-gray-100" : "text-white bg-color"
-                  } rounded-full `}
-                />
+                <LikeButton product={product} value={"details"} />
               </div>
             </div>
             <div className=" relative flex flex-col w-full max-h-[500px] gap-y-4 mt-4    mx-auto">
